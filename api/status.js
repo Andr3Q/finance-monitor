@@ -5,7 +5,9 @@ const TARGET = process.env.TARGET_URL || 'https://finance-app-1042158013294.sout
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Cache-Control', 'no-store')
+  // Edge cache: 30s fresco, até 60s stale enquanto revalida.
+  // Evita recheck a cada clique sem atrasar muito a detecção de falhas.
+  res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60')
 
   const checks = await Promise.all([
     ping(`${TARGET}/health`,  'API + DB'),
