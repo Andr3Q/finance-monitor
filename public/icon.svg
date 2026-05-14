@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="115" fill="#080d09"/>
+
+  <!-- Subtle grid -->
+  <line x1="0" y1="256" x2="512" y2="256" stroke="rgba(74,196,110,.06)" stroke-width="1.5"/>
+  <line x1="0" y1="170" x2="512" y2="170" stroke="rgba(74,196,110,.04)" stroke-width="1"/>
+  <line x1="0" y1="342" x2="512" y2="342" stroke="rgba(74,196,110,.04)" stroke-width="1"/>
+  <line x1="170" y1="0" x2="170" y2="512" stroke="rgba(74,196,110,.04)" stroke-width="1"/>
+  <line x1="342" y1="0" x2="342" y2="512" stroke="rgba(74,196,110,.04)" stroke-width="1"/>
+
+  <!-- Pulse / EKG line — glow layer -->
+  <polyline
+    points="52,256 155,256 185,256 210,145 228,368 248,256 282,200 310,256 360,256 460,256"
+    fill="none"
+    stroke="#4ac46e"
+    stroke-width="28"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.18"
+  />
+
+  <!-- Pulse / EKG line — main -->
+  <polyline
+    points="52,256 155,256 185,256 210,145 228,368 248,256 282,200 310,256 360,256 460,256"
+    fill="none"
+    stroke="#4ac46e"
+    stroke-width="18"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Dot pulsing at end -->
+  <circle cx="460" cy="256" r="18" fill="#4ac46e" opacity="0.25"/>
+  <circle cx="460" cy="256" r="10" fill="#4ac46e"/>
+</svg>
