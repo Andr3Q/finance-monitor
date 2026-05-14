@@ -11,16 +11,15 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:     #080d09;
-      --card:   #0f1610;
-      --card2:  #141c15;
-      --bd:     rgba(255,255,255,.07);
-      --t1:     #eef2ee;
-      --t2:     #7a9280;
-      --t3:     #3d5242;
-      --green:  #4ac46e;
-      --red:    #e05c5c;
-      --yellow: #e0b84a;
+      --bg:    #080d09;
+      --card:  #0f1610;
+      --bd:    rgba(255,255,255,.07);
+      --t1:    #eef2ee;
+      --t2:    #7a9280;
+      --t3:    #3a4f3e;
+      --green: #4ac46e;
+      --red:   #e05c5c;
+      --yel:   #e0b84a;
     }
 
     body {
@@ -32,176 +31,118 @@
       padding-bottom: env(safe-area-inset-bottom, 0);
     }
 
-    .page {
-      max-width: 420px;
-      margin: 0 auto;
-      padding: 16px 16px 48px;
-    }
+    .page { max-width: 430px; margin: 0 auto; padding: 16px 16px 48px; }
 
     /* ── Header ── */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .header-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo-dot {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #1a3320, #0f1f14);
-      border: 1px solid rgba(74,196,110,.2);
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .hlogo  { display: flex; align-items: center; gap: 10px; }
+    .hicon  {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: linear-gradient(145deg, #162219, #0c1410);
+      border: 1px solid rgba(74,196,110,.18);
       display: flex; align-items: center; justify-content: center;
     }
-    .logo-dot svg { flex-shrink: 0; }
-    .header-title { font-size: 20px; font-weight: 800; letter-spacing: -.4px; }
-    .header-sub   { font-size: 11px; color: var(--t3); margin-top: 1px; }
+    .htitle { font-size: 20px; font-weight: 800; letter-spacing: -.4px; }
+    .hsub   { font-size: 11px; color: var(--t3); margin-top: 1px; }
 
     .refresh-btn {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--card2); border: 1px solid var(--bd);
-      color: var(--t2); border-radius: 20px;
-      padding: 7px 12px; font-size: 12px; font-weight: 600;
-      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      display: flex; align-items: center; gap: 5px;
+      background: var(--card); border: 1px solid var(--bd);
+      color: var(--t2); border-radius: 20px; padding: 7px 13px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      -webkit-tap-highlight-color: transparent; font-family: inherit;
       transition: opacity .15s;
-      font-family: inherit;
     }
     .refresh-btn:active { opacity: .6; }
-    #countdown { min-width: 22px; text-align: right; font-variant-numeric: tabular-nums; }
+    #countdown { font-variant-numeric: tabular-nums; min-width: 22px; text-align: right; }
 
-    /* ── Status Banner ── */
+    /* ── Banner ── */
     .banner {
       display: flex; align-items: center; gap: 10px;
-      padding: 13px 16px; border-radius: 16px;
-      margin-bottom: 20px; font-size: 14px; font-weight: 700;
-      transition: background .3s, border-color .3s;
+      padding: 13px 16px; border-radius: 16px; margin-bottom: 20px;
+      font-size: 14px; font-weight: 700; transition: all .3s;
     }
-    .banner-ok  { background: rgba(74,196,110,.1);  border: 1px solid rgba(74,196,110,.18); color: var(--green); }
-    .banner-err { background: rgba(224,92,92,.1);   border: 1px solid rgba(224,92,92,.22);  color: var(--red); }
-    .banner-loading { background: var(--card); border: 1px solid var(--bd); color: var(--t2); }
-    .banner-ts { margin-left: auto; font-size: 11px; font-weight: 500; opacity: .65; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .ok  { background: rgba(74,196,110,.1);  border: 1px solid rgba(74,196,110,.18); color: var(--green); }
+    .err { background: rgba(224,92,92,.1);   border: 1px solid rgba(224,92,92,.22);  color: var(--red); }
+    .loading { background: var(--card); border: 1px solid var(--bd); color: var(--t2); }
+    .banner-ts { margin-left: auto; font-size: 11px; font-weight: 500; opacity: .65; font-variant-numeric: tabular-nums; }
 
     /* ── Dot ── */
-    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .dot-ok      { background: var(--green); box-shadow: 0 0 8px rgba(74,196,110,.65); animation: pulse-ok 2.5s ease infinite; }
-    .dot-err     { background: var(--red);   box-shadow: 0 0 8px rgba(224,92,92,.65);  animation: pulse-err 1.5s ease infinite; }
-    .dot-neutral { background: var(--t3); }
-    @keyframes pulse-ok  { 0%,100%{box-shadow:0 0 6px rgba(74,196,110,.5)} 50%{box-shadow:0 0 14px rgba(74,196,110,.9)} }
-    @keyframes pulse-err { 0%,100%{box-shadow:0 0 6px rgba(224,92,92,.5)}  50%{box-shadow:0 0 14px rgba(224,92,92,.9)} }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+    .d-ok  { background: var(--green); box-shadow: 0 0 8px rgba(74,196,110,.6); animation: p-ok 2.5s ease infinite; }
+    .d-err { background: var(--red);   box-shadow: 0 0 8px rgba(224,92,92,.6);  animation: p-err 1.5s ease infinite; }
+    .d-neu { background: var(--t3); }
+    @keyframes p-ok  { 0%,100%{ box-shadow:0 0 5px rgba(74,196,110,.4) } 50%{ box-shadow:0 0 14px rgba(74,196,110,.9) } }
+    @keyframes p-err { 0%,100%{ box-shadow:0 0 5px rgba(224,92,92,.4) }  50%{ box-shadow:0 0 14px rgba(224,92,92,.9) } }
 
     /* ── Section label ── */
-    .section-label {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .08em; color: var(--t3); margin: 0 0 10px 2px;
-    }
+    .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--t3); margin: 0 0 10px 2px; }
 
-    /* ── Main services grid ── */
-    .services-grid {
+    /* ── Latency card (full width — API & Frontend) ── */
+    .lat-card {
+      background: var(--card);
+      border: 1px solid var(--bd);
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .lat-card-left { flex: 1; min-width: 0; }
+    .lat-name-row  { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+    .lat-name  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--t2); }
+    .lat-val   { font-size: 42px; font-weight: 800; letter-spacing: -1px; line-height: 1; color: var(--t1); }
+    .lat-unit  { font-size: 18px; font-weight: 600; color: var(--t2); }
+    .lat-sub   { font-size: 11px; color: var(--t3); margin-top: 5px; }
+    .lat-bar   { height: 4px; background: rgba(255,255,255,.06); border-radius: 2px; overflow: hidden; margin-top: 10px; }
+    .lat-fill  { height: 100%; border-radius: 2px; transition: width .6s cubic-bezier(.4,0,.2,1), background .4s; }
+
+    .lat-card-right { flex-shrink: 0; text-align: center; }
+    .tag {
+      font-size: 11px; font-weight: 700; border-radius: 8px; padding: 4px 10px;
+      display: inline-block;
+    }
+    .t-ok  { background: rgba(74,196,110,.15); color: var(--green); }
+    .t-err { background: rgba(224,92,92,.15);  color: var(--red); }
+    .t-neu { background: rgba(255,255,255,.06); color: var(--t3); }
+
+    /* ── Small cards row (DB + Sessão) ── */
+    .small-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 20px;
     }
-
-    /* ── Card ── */
-    .card {
+    .small-card {
       background: var(--card);
       border: 1px solid var(--bd);
       border-radius: 18px;
       padding: 16px;
-      position: relative;
-      overflow: hidden;
     }
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: linear-gradient(135deg, rgba(74,196,110,.04) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .card-err::before { background: linear-gradient(135deg, rgba(224,92,92,.05) 0%, transparent 60%); }
-
-    .card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 12px;
-    }
-    .card-label-row { display: flex; align-items: center; gap: 7px; }
-    .card-name { font-size: 11px; font-weight: 700; color: var(--t2); text-transform: uppercase; letter-spacing: .05em; }
-
-    .tag {
-      font-size: 10px; font-weight: 700;
-      border-radius: 6px; padding: 2px 7px;
-    }
-    .tag-ok      { background: rgba(74,196,110,.15); color: var(--green); }
-    .tag-err     { background: rgba(224,92,92,.15);  color: var(--red); }
-    .tag-neutral { background: rgba(255,255,255,.07); color: var(--t3); }
-
-    .card-value {
-      font-size: 32px; font-weight: 800; color: var(--t1);
-      letter-spacing: -.5px; line-height: 1;
-    }
-    .card-unit { font-size: 15px; font-weight: 600; color: var(--t2); }
-    .card-sub  { font-size: 11px; color: var(--t3); margin-top: 5px; }
-
-    /* Latency bar */
-    .lat-bar {
-      height: 3px; background: rgba(255,255,255,.06);
-      border-radius: 2px; overflow: hidden; margin-top: 10px;
-    }
-    .lat-bar-fill {
-      height: 100%; border-radius: 2px;
-      transition: width .6s cubic-bezier(.4,0,.2,1), background .4s;
-    }
-
-    /* ── Stats row ── */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-    .stat-card {
-      background: var(--card);
-      border: 1px solid var(--bd);
-      border-radius: 16px;
-      padding: 14px 10px;
-      text-align: center;
-    }
-    .stat-val { font-size: 26px; font-weight: 800; color: var(--t1); line-height: 1; }
-    .stat-lbl { font-size: 10px; font-weight: 600; color: var(--t3); margin-top: 4px; text-transform: uppercase; letter-spacing: .05em; }
+    .sc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .sc-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--t2); display: flex; align-items: center; gap: 7px; }
+    .sc-val  { font-size: 26px; font-weight: 800; color: var(--t1); line-height: 1; }
+    .sc-sub  { font-size: 11px; color: var(--t3); margin-top: 4px; }
 
     /* ── History ── */
-    .history-list { display: flex; flex-direction: column; gap: 6px; }
-    .history-item {
+    .hist-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+    .hist-item {
       display: flex; align-items: center; gap: 10px;
       background: var(--card); border: 1px solid var(--bd);
       border-radius: 12px; padding: 11px 14px;
     }
-    .history-time   { font-size: 11px; color: var(--t3); font-variant-numeric: tabular-nums; min-width: 56px; }
-    .history-status { flex: 1; font-size: 12px; font-weight: 700; }
-    .history-ms     { font-size: 11px; font-variant-numeric: tabular-nums; min-width: 46px; text-align: right; }
-    .ok-text  { color: var(--green); }
-    .err-text { color: var(--red); }
+    .hist-time   { font-size: 11px; color: var(--t3); font-variant-numeric: tabular-nums; min-width: 56px; }
+    .hist-status { flex: 1; font-size: 12px; font-weight: 700; }
+    .hist-ms     { font-size: 11px; font-variant-numeric: tabular-nums; min-width: 46px; text-align: right; }
+    .ok-t  { color: var(--green); }
+    .err-t { color: var(--red); }
 
-    /* ── Spinner ── */
-    .spinner {
-      width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,.1);
-      border-top-color: var(--green);
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      flex-shrink: 0;
-    }
+    /* ── Spinner / Footer ── */
+    .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.1); border-top-color: var(--green); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Footer ── */
-    .footer { text-align: center; font-size: 11px; color: var(--t3); padding-top: 12px; }
-    .footer b { color: var(--green); font-weight: 700; }
+    .footer { text-align: center; font-size: 11px; color: var(--t3); }
+    .footer b { color: var(--green); }
   </style>
 </head>
 <body>
@@ -209,15 +150,15 @@
 
   <!-- Header -->
   <div class="header">
-    <div class="header-logo">
-      <div class="logo-dot">
+    <div class="hlogo">
+      <div class="hicon">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ac46e" stroke-width="2" stroke-linecap="round">
           <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
         </svg>
       </div>
       <div>
-        <div class="header-title">Monitor</div>
-        <div class="header-sub">Finance · Cloud Run</div>
+        <div class="htitle">Monitor</div>
+        <div class="hsub">Finance · Cloud Run</div>
       </div>
     </div>
     <button class="refresh-btn" onclick="check()">
@@ -230,78 +171,77 @@
   </div>
 
   <!-- Banner -->
-  <div class="banner banner-loading" id="banner">
-    <div class="dot dot-neutral" id="banner-dot"></div>
+  <div class="banner loading" id="banner">
+    <span class="dot d-neu" id="banner-dot"></span>
     <span id="banner-text">Verificando sistemas...</span>
     <span class="banner-ts" id="banner-ts"></span>
   </div>
 
   <!-- Serviços -->
-  <div class="section-label">Serviços</div>
-  <div class="services-grid">
+  <div class="label">Serviços</div>
 
-    <!-- API -->
-    <div class="card" id="api-card">
-      <div class="card-header">
-        <div class="card-label-row">
-          <div class="dot dot-neutral" id="api-dot"></div>
-          <span class="card-name">API</span>
-        </div>
-        <span class="tag tag-neutral" id="api-tag">—</span>
+  <!-- API -->
+  <div class="lat-card" id="api-card">
+    <div class="lat-card-left">
+      <div class="lat-name-row">
+        <span class="dot d-neu" id="api-dot"></span>
+        <span class="lat-name">API</span>
       </div>
-      <div class="card-value" id="api-ms">—</div>
-      <div class="card-sub" id="api-sub">aguardando...</div>
-      <div class="lat-bar"><div class="lat-bar-fill" id="api-bar" style="width:0"></div></div>
+      <div><span class="lat-val" id="api-ms">—</span><span class="lat-unit" id="api-unit"></span></div>
+      <div class="lat-sub" id="api-sub">aguardando...</div>
+      <div class="lat-bar"><div class="lat-fill" id="api-bar" style="width:0"></div></div>
     </div>
-
-    <!-- Banco -->
-    <div class="card" id="db-card">
-      <div class="card-header">
-        <div class="card-label-row">
-          <div class="dot dot-neutral" id="db-dot"></div>
-          <span class="card-name">Banco</span>
-        </div>
-        <span class="tag tag-neutral" id="db-tag">—</span>
-      </div>
-      <div class="card-value" id="db-val" style="font-size:22px;padding-top:4px">—</div>
-      <div class="card-sub" id="db-sub">Neon PostgreSQL</div>
+    <div class="lat-card-right">
+      <span class="tag t-neu" id="api-tag">—</span>
     </div>
-
-    <!-- Frontend -->
-    <div class="card" id="front-card">
-      <div class="card-header">
-        <div class="card-label-row">
-          <div class="dot dot-neutral" id="front-dot"></div>
-          <span class="card-name">Frontend</span>
-        </div>
-        <span class="tag tag-neutral" id="front-tag">—</span>
-      </div>
-      <div class="card-value" id="front-ms">—</div>
-      <div class="card-sub" id="front-sub">aguardando...</div>
-      <div class="lat-bar"><div class="lat-bar-fill" id="front-bar" style="width:0"></div></div>
-    </div>
-
-    <!-- Checks -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-label-row">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round">
-            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-          </svg>
-          <span class="card-name">Sessão</span>
-        </div>
-      </div>
-      <div class="card-value" id="session-val" style="font-size:32px">0</div>
-      <div class="card-sub">checks realizados</div>
-    </div>
-
   </div>
 
-  <!-- Últimas verificações -->
-  <div class="section-label">Últimas verificações</div>
-  <div class="history-list" id="history-list">
-    <div class="history-item">
-      <span class="history-time" style="color:var(--t3);font-size:12px">Aguardando primeira verificação...</span>
+  <!-- Frontend -->
+  <div class="lat-card" id="front-card">
+    <div class="lat-card-left">
+      <div class="lat-name-row">
+        <span class="dot d-neu" id="front-dot"></span>
+        <span class="lat-name">Frontend</span>
+      </div>
+      <div><span class="lat-val" id="front-ms">—</span><span class="lat-unit" id="front-unit"></span></div>
+      <div class="lat-sub" id="front-sub">aguardando...</div>
+      <div class="lat-bar"><div class="lat-fill" id="front-bar" style="width:0"></div></div>
+    </div>
+    <div class="lat-card-right">
+      <span class="tag t-neu" id="front-tag">—</span>
+    </div>
+  </div>
+
+  <!-- DB + Sessão -->
+  <div class="small-row">
+    <div class="small-card" id="db-card">
+      <div class="sc-top">
+        <span class="sc-name"><span class="dot d-neu" id="db-dot"></span>Banco</span>
+        <span class="tag t-neu" id="db-tag">—</span>
+      </div>
+      <div class="sc-val" id="db-val">—</div>
+      <div class="sc-sub">Neon PostgreSQL</div>
+    </div>
+
+    <div class="small-card">
+      <div class="sc-top">
+        <span class="sc-name">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Sessão
+        </span>
+      </div>
+      <div class="sc-val" id="session-val">0</div>
+      <div class="sc-sub">checks OK</div>
+    </div>
+  </div>
+
+  <!-- Histórico -->
+  <div class="label">Últimas verificações</div>
+  <div class="hist-list" id="hist-list">
+    <div class="hist-item">
+      <span class="hist-time" style="color:var(--t3);font-size:12px">Aguardando primeira verificação...</span>
     </div>
   </div>
 
@@ -310,101 +250,80 @@
 </div>
 <script>
   const REFRESH = 30
-  let timer = REFRESH, history = [], checks = 0
+  let timer = REFRESH, hist = [], checks = 0
 
-  const latColor = ms => ms < 400 ? 'var(--green)' : ms < 1200 ? 'var(--yellow)' : 'var(--red)'
+  const latColor = ms => ms < 400 ? 'var(--green)' : ms < 1200 ? 'var(--yel)' : 'var(--red)'
   const latPct   = ms => Math.min(100, (ms / 2000) * 100)
   const fmtTime  = iso => new Date(iso).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit', second:'2-digit' })
 
-  function setDot(id, state) {
-    document.getElementById(id).className = `dot dot-${state}`
-  }
-  function setTag(id, cls, text) {
-    const el = document.getElementById(id)
-    el.className = `tag tag-${cls}`
-    el.textContent = text
+  function dot(id, s) { document.getElementById(id).className = `dot d-${s}` }
+  function tag(id, cls, txt) { const e = document.getElementById(id); e.className = `tag t-${cls}`; e.textContent = txt }
+
+  function setLatCard(prefix, check) {
+    dot(`${prefix}-dot`, check.ok ? 'ok' : 'err')
+    tag(`${prefix}-tag`, check.ok ? 'ok' : 'err', check.ok ? 'Online' : 'Offline')
+    if (check.ok) {
+      document.getElementById(`${prefix}-ms`).textContent = check.ms
+      document.getElementById(`${prefix}-unit`).textContent = 'ms'
+    } else {
+      document.getElementById(`${prefix}-ms`).textContent = '—'
+      document.getElementById(`${prefix}-unit`).textContent = ''
+    }
+    document.getElementById(`${prefix}-sub`).textContent = check.ok
+      ? `HTTP ${check.status} · ${prefix === 'api' ? 'Cloud Run' : 'React/Vite'}`
+      : (check.detail || 'Sem resposta')
+    document.getElementById(`${prefix}-bar`).style.width      = `${latPct(check.ms)}%`
+    document.getElementById(`${prefix}-bar`).style.background = latColor(check.ms)
   }
 
   async function check() {
     timer = REFRESH
     document.getElementById('countdown').textContent = `${REFRESH}s`
     const banner = document.getElementById('banner')
-    banner.className = 'banner banner-loading'
-    setDot('banner-dot', 'neutral')
+    banner.className = 'banner loading'
+    dot('banner-dot', 'neu')
     document.getElementById('banner-text').textContent = 'Verificando...'
 
     try {
-      const res  = await fetch('/api/status')
-      const data = await res.json()
-
-      const api   = data.checks.find(c => c.name === 'API + DB')
+      const data = await fetch('/api/status').then(r => r.json())
+      const api  = data.checks.find(c => c.name === 'API + DB')
       const front = data.checks.find(c => c.name === 'Frontend')
       checks++
-      document.getElementById('session-val').textContent = checks
 
       // Banner
-      banner.className = `banner ${data.ok ? 'banner-ok' : 'banner-err'}`
-      setDot('banner-dot', data.ok ? 'ok' : 'err')
-      document.getElementById('banner-text').textContent = data.ok
-        ? 'Todos os sistemas operacionais'
-        : 'Degradação detectada'
+      banner.className = `banner ${data.ok ? 'ok' : 'err'}`
+      dot('banner-dot', data.ok ? 'ok' : 'err')
+      document.getElementById('banner-text').textContent = data.ok ? 'Todos os sistemas operacionais' : 'Degradação detectada'
       document.getElementById('banner-ts').textContent = fmtTime(data.ts)
 
-      // API card
-      if (api) {
-        setDot('api-dot', api.ok ? 'ok' : 'err')
-        setTag('api-tag', api.ok ? 'ok' : 'err', api.ok ? 'Online' : 'Offline')
-        document.getElementById('api-ms').innerHTML = api.ok
-          ? `${api.ms}<span class="card-unit">ms</span>` : '—'
-        document.getElementById('api-sub').textContent = api.ok
-          ? `HTTP ${api.status} · Cloud Run` : (api.detail || 'Sem resposta')
-        document.getElementById('api-bar').style.width  = `${latPct(api.ms)}%`
-        document.getElementById('api-bar').style.background = latColor(api.ms)
-        document.getElementById('api-card').className = `card${api.ok ? '' : ' card-err'}`
-      }
+      if (api)   setLatCard('api',   api)
+      if (front) setLatCard('front', front)
 
-      // DB card
+      // DB
       const dbOk  = api?.dbStatus === 'ok'
       const dbDeg = api?.dbStatus === 'degraded'
-      setDot('db-dot', dbOk ? 'ok' : 'err')
-      setTag('db-tag', dbOk ? 'ok' : 'err', dbOk ? 'Online' : dbDeg ? 'Falha' : 'Offline')
-      document.getElementById('db-val').textContent  = dbOk ? 'Online' : dbDeg ? 'Falha' : 'Offline'
-      document.getElementById('db-card').className   = `card${dbOk ? '' : ' card-err'}`
+      dot('db-dot', dbOk ? 'ok' : 'err')
+      tag('db-tag', dbOk ? 'ok' : 'err', dbOk ? 'Online' : dbDeg ? 'Falha' : 'Offline')
+      document.getElementById('db-val').textContent = dbOk ? 'Online' : dbDeg ? 'Falha' : 'Offline'
 
-      // Frontend card
-      if (front) {
-        setDot('front-dot', front.ok ? 'ok' : 'err')
-        setTag('front-tag', front.ok ? 'ok' : 'err', front.ok ? 'Online' : 'Offline')
-        document.getElementById('front-ms').innerHTML = front.ok
-          ? `${front.ms}<span class="card-unit">ms</span>` : '—'
-        document.getElementById('front-sub').textContent = front.ok
-          ? `HTTP ${front.status} · React/Vite` : (front.detail || 'Sem resposta')
-        document.getElementById('front-bar').style.width  = `${latPct(front.ms)}%`
-        document.getElementById('front-bar').style.background = latColor(front.ms)
-        document.getElementById('front-card').className = `card${front.ok ? '' : ' card-err'}`
-      }
+      // Sessão
+      document.getElementById('session-val').textContent = checks
 
-      // History
-      history.unshift({ ts: data.ts, ok: data.ok, ms: api?.ms ?? 0, db: dbOk })
-      if (history.length > 8) history.pop()
-      renderHistory()
+      // Histórico
+      hist.unshift({ ts: data.ts, ok: data.ok, ms: api?.ms ?? 0, db: dbOk })
+      if (hist.length > 8) hist.pop()
+      document.getElementById('hist-list').innerHTML = hist.map(h => `
+        <div class="hist-item">
+          <span class="hist-time">${fmtTime(h.ts)}</span>
+          <span class="hist-status ${h.ok ? 'ok-t' : 'err-t'}">${h.ok ? '✓ OK' : '✗ Falha'} · DB ${h.db ? 'OK' : '⚠ Falha'}</span>
+          <span class="hist-ms" style="color:${latColor(h.ms)}">${h.ms}ms</span>
+        </div>`).join('')
 
     } catch {
-      banner.className = 'banner banner-err'
-      setDot('banner-dot', 'err')
-      document.getElementById('banner-text').textContent = 'Monitor sem resposta'
+      banner.className = 'banner err'
+      dot('banner-dot', 'err')
+      document.getElementById('banner-text').textContent = 'Sem resposta do monitor'
     }
-  }
-
-  function renderHistory() {
-    document.getElementById('history-list').innerHTML = history.map(h => `
-      <div class="history-item">
-        <span class="history-time">${fmtTime(h.ts)}</span>
-        <span class="history-status ${h.ok ? 'ok-text' : 'err-text'}">
-          ${h.ok ? '✓ OK' : '✗ Falha'} · DB ${h.db ? 'OK' : '⚠ Falha'}
-        </span>
-        <span class="history-ms" style="color:${latColor(h.ms)}">${h.ms}ms</span>
-      </div>`).join('')
   }
 
   setInterval(() => {
