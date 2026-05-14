@@ -1,7 +1,7 @@
 // Vercel serverless function — checa o Finance app do lado do servidor
 // Evita CORS e esconde a URL interna do cliente
 
-const TARGET = 'https://finance-app-1042158013294.southamerica-east1.run.app'
+const TARGET = process.env.TARGET_URL || 'https://finance-app-1042158013294.southamerica-east1.run.app'
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')

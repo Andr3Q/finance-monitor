@@ -1,0 +1,15 @@
+# ── Variáveis de ambiente ──────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Vercel ────────────────────────────────────────────
+.vercel/
+
+# ── Sistema operacional ────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── IDE ───────────────────────────────────────────────
+.vscode/settings.json
+.idea/
