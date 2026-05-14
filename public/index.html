@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Finance Monitor</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0a0f0c" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0a0f0c;
+      --card:    #131a14;
+      --border:  rgba(255,255,255,.08);
+      --t1:      #f0f4f0;
+      --t2:      #8a9e8c;
+      --t3:      #4a5c4c;
+      --green:   #4ac46e;
+      --red:     #e05c5c;
+      --yellow:  #e0b84a;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--t1);
+      font-family: -apple-system, 'SF Pro Display', system-ui, sans-serif;
+      min-height: 100dvh;
+      padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+    }
+
+    .page {
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .header-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      color: var(--t1);
+    }
+    .header-sub {
+      font-size: 12px;
+      color: var(--t2);
+      margin-top: 2px;
+    }
+    .refresh-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--t2);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity .15s;
+    }
+    .refresh-btn:active { opacity: .6; }
+    .refresh-btn svg { flex-shrink: 0; }
+
+    /* Status banner */
+    .status-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .banner-ok  { background: rgba(74,196,110,.12); border: 1px solid rgba(74,196,110,.2); color: var(--green); }
+    .banner-err { background: rgba(224,92,92,.12);  border: 1px solid rgba(224,92,92,.25);  color: var(--red); }
+    .banner-loading { background: var(--card); border: 1px solid var(--border); color: var(--t2); }
+    .banner-ts { margin-left: auto; font-size: 11px; font-weight: 500; opacity: .7; white-space: nowrap; }
+
+    /* Dot */
+    .dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-ok  { background: var(--green); box-shadow: 0 0 7px rgba(74,196,110,.7); }
+    .dot-err { background: var(--red);   box-shadow: 0 0 7px rgba(224,92,92,.7); }
+    .dot-loading { background: var(--t3); }
+
+    /* Section label */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--t3);
+      margin: 0 0 8px;
+    }
+
+    /* Cards */
+    .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .card-full { grid-column: 1 / -1; }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .card-name { font-size: 11px; font-weight: 600; color: var(--t2); flex: 1; text-transform: uppercase; letter-spacing: .04em; }
+    .card-status-tag {
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 6px;
+      padding: 2px 7px;
+    }
+    .tag-ok  { background: rgba(74,196,110,.15); color: var(--green); }
+    .tag-err { background: rgba(224,92,92,.15);  color: var(--red); }
+    .tag-loading { background: var(--border); color: var(--t3); }
+
+    .card-val  { font-size: 28px; font-weight: 800; color: var(--t1); line-height: 1; }
+    .card-unit { font-size: 14px; font-weight: 500; color: var(--t2); }
+    .card-sub  { font-size: 11px; color: var(--t3); margin-top: 4px; }
+
+    /* Latency bar */
+    .lat-bar-wrap { margin-top: 6px; }
+    .lat-bar-track { height: 4px; background: rgba(255,255,255,.06); border-radius: 2px; overflow: hidden; }
+    .lat-bar-fill  { height: 100%; border-radius: 2px; transition: width .5s ease; }
+    .lat-label { font-size: 11px; color: var(--t3); margin-top: 5px; display: block; }
+
+    /* History row */
+    .history { margin-bottom: 20px; }
+    .history-list { display: flex; flex-direction: column; gap: 6px; }
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+    .history-time { color: var(--t3); min-width: 60px; }
+    .history-status { flex: 1; font-weight: 600; }
+    .history-ms { color: var(--t2); min-width: 50px; text-align: right; }
+    .ok-text  { color: var(--green); }
+    .err-text { color: var(--red); }
+
+    /* Spinner */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.15);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--t3);
+      padding-top: 8px;
+    }
+    .footer span { color: var(--green); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="header-title">Monitor</div>
+      <div class="header-sub" id="target-url">finance-app · Cloud Run</div>
+    </div>
+    <button class="refresh-btn" onclick="check()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+      <span id="countdown">30s</span>
+    </button>
+  </div>
+
+  <div class="status-banner banner-loading" id="banner">
+    <div class="dot dot-loading" id="banner-dot"></div>
+    <span id="banner-text">Verificando...</span>
+    <span class="banner-ts" id="banner-ts"></span>
+  </div>
+
+  <div class="section-label">Serviços</div>
+  <div class="cards-grid" id="services-grid">
+    <div class="card">
+      <div class="card-top">
+        <div class="dot dot-loading" id="api-dot"></div>
+        <span class="card-name">API</span>
+        <span class="card-status-tag tag-loading" id="api-tag">—</span>
+      </div>
+      <div class="card-val" id="api-ms">—</div>
+      <div class="lat-bar-wrap">
+        <div class="lat-bar-track"><div class="lat-bar-fill" id="api-bar" style="width:0%"></div></div>
+        <span class="lat-label" id="api-sub">aguardando...</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="dot dot-loading" id="db-dot"></div>
+        <span class="card-name">Banco</span>
+        <span class="card-status-tag tag-loading" id="db-tag">—</span>
+      </div>
+      <div class="card-val" id="db-val">—</div>
+      <div class="card-sub" id="db-sub">Neon PostgreSQL</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <div class="dot dot-loading" id="front-dot"></div>
+        <span class="card-name">Frontend</span>
+        <span class="card-status-tag tag-loading" id="front-tag">—</span>
+      </div>
+      <div class="card-val" id="front-ms">—</div>
+      <div class="lat-bar-wrap">
+        <div class="lat-bar-track"><div class="lat-bar-fill" id="front-bar" style="width:0%"></div></div>
+        <span class="lat-label" id="front-sub">aguardando...</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-top">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span class="card-name">Uptime</span>
+      </div>
+      <div class="card-val" id="uptime-val" style="font-size:20px">—</div>
+      <div class="card-sub" id="uptime-sub">desde último restart</div>
+    </div>
+  </div>
+
+  <div class="section-label">Últimas verificações</div>
+  <div class="history">
+    <div class="history-list" id="history-list">
+      <div class="history-item"><span class="history-time" style="color:var(--t3)">Aguardando primeira verificação...</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Auto-refresh a cada <span>30s</span> · Finance Monitor
+  </div>
+
+</div>
+
+<script>
+  const REFRESH = 30
+  let timer = REFRESH
+  let history = []
+
+  function latColor(ms) {
+    if (ms < 400)  return 'var(--green)'
+    if (ms < 1200) return 'var(--yellow)'
+    return 'var(--red)'
+  }
+  function latPct(ms) { return Math.min(100, (ms / 2000) * 100) }
+
+  function fmtUptime(s) {
+    const d = Math.floor(s / 86400)
+    const h = Math.floor((s % 86400) / 3600)
+    const m = Math.floor((s % 3600) / 60)
+    if (d > 0) return `${d}d ${h}h`
+    if (h > 0) return `${h}h ${m}m`
+    return `${m}m ${s % 60}s`
+  }
+
+  function fmtTime(iso) {
+    return new Date(iso).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit', second:'2-digit' })
+  }
+
+  function setDot(id, ok) {
+    const el = document.getElementById(id)
+    el.className = `dot ${ok ? 'dot-ok' : 'dot-err'}`
+  }
+  function setTag(id, ok, label) {
+    const el = document.getElementById(id)
+    el.className = `card-status-tag ${ok ? 'tag-ok' : 'tag-err'}`
+    el.textContent = label
+  }
+
+  async function check() {
+    // Reset countdown
+    timer = REFRESH
+    document.getElementById('countdown').textContent = `${REFRESH}s`
+
+    const banner = document.getElementById('banner')
+    banner.className = 'status-banner banner-loading'
+    document.getElementById('banner-dot').className = 'dot dot-loading'
+    document.getElementById('banner-text').textContent = 'Verificando...'
+
+    try {
+      const res  = await fetch('/api/status')
+      const data = await res.json()
+
+      const apiCheck   = data.checks.find(c => c.name === 'API + DB')
+      const frontCheck = data.checks.find(c => c.name === 'Frontend')
+
+      // Banner
+      banner.className = `status-banner ${data.ok ? 'banner-ok' : 'banner-err'}`
+      document.getElementById('banner-dot').className = `dot ${data.ok ? 'dot-ok' : 'dot-err'}`
+      document.getElementById('banner-text').textContent = data.ok
+        ? 'Todos os sistemas operacionais'
+        : 'Degradação detectada'
+      document.getElementById('banner-ts').textContent = fmtTime(data.ts)
+
+      // API card
+      if (apiCheck) {
+        setDot('api-dot', apiCheck.ok)
+        setTag('api-tag', apiCheck.ok, apiCheck.ok ? 'Online' : 'Offline')
+        document.getElementById('api-ms').innerHTML = apiCheck.ok
+          ? `${apiCheck.ms}<span class="card-unit">ms</span>` : '—'
+        document.getElementById('api-bar').style.width = `${latPct(apiCheck.ms)}%`
+        document.getElementById('api-bar').style.background = latColor(apiCheck.ms)
+        document.getElementById('api-sub').textContent = apiCheck.ok
+          ? `HTTP ${apiCheck.status} · Cloud Run` : apiCheck.detail
+      }
+
+      // DB card (derived from API health response)
+      const dbOk = apiCheck?.dbStatus === 'ok'
+      const dbDegraded = apiCheck?.dbStatus === 'degraded'
+      setDot('db-dot', dbOk)
+      setTag('db-tag', dbOk, dbOk ? 'Online' : dbDegraded ? 'Degradado' : '—')
+      document.getElementById('db-val').textContent = dbOk ? 'Online' : dbDegraded ? 'Falha' : '—'
+      document.getElementById('db-sub').textContent = 'Neon PostgreSQL'
+
+      // Frontend card
+      if (frontCheck) {
+        setDot('front-dot', frontCheck.ok)
+        setTag('front-tag', frontCheck.ok, frontCheck.ok ? 'Online' : 'Offline')
+        document.getElementById('front-ms').innerHTML = frontCheck.ok
+          ? `${frontCheck.ms}<span class="card-unit">ms</span>` : '—'
+        document.getElementById('front-bar').style.width = `${latPct(frontCheck.ms)}%`
+        document.getElementById('front-bar').style.background = latColor(frontCheck.ms)
+        document.getElementById('front-sub').textContent = frontCheck.ok
+          ? `HTTP ${frontCheck.status} · React/Vite` : frontCheck.detail
+      }
+
+      // Uptime (from API health)
+      if (apiCheck?.ok) {
+        // We don't have uptime from the basic /health endpoint
+        // Show check count instead
+        document.getElementById('uptime-val').textContent = `${history.length + 1}`
+        document.getElementById('uptime-sub').textContent = 'verificações OK nesta sessão'
+      }
+
+      // History
+      history.unshift({
+        ts:  data.ts,
+        ok:  data.ok,
+        ms:  apiCheck?.ms ?? 0,
+        api: apiCheck?.ok,
+        db:  dbOk,
+      })
+      if (history.length > 8) history.pop()
+      renderHistory()
+
+    } catch (err) {
+      banner.className = 'status-banner banner-err'
+      document.getElementById('banner-dot').className = 'dot dot-err'
+      document.getElementById('banner-text').textContent = 'Erro ao verificar — sem resposta'
+    }
+  }
+
+  function renderHistory() {
+    const list = document.getElementById('history-list')
+    list.innerHTML = history.map(h => `
+      <div class="history-item">
+        <span class="history-time">${fmtTime(h.ts)}</span>
+        <span class="history-status ${h.ok ? 'ok-text' : 'err-text'}">
+          ${h.ok ? '✓ OK' : '✗ Falha'}
+          · DB ${h.db ? 'OK' : 'Falha'}
+        </span>
+        <span class="history-ms" style="color:${latColor(h.ms)}">${h.ms}ms</span>
+      </div>
+    `).join('')
+  }
+
+  // Countdown
+  setInterval(() => {
+    timer--
+    if (timer <= 0) { check(); timer = REFRESH }
+    document.getElementById('countdown').textContent = `${timer}s`
+  }, 1000)
+
+  // Primeira verificação
+  check()
+</script>
+</body>
+</html>

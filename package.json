@@ -1,0 +1,6 @@
+{
+  "name": "finance-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monitor de infraestrutura do Finance app"
+}
