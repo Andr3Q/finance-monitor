@@ -1,336 +1,377 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Finance Monitor</title>
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#080d09" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" type="image/png" href="/icon-192.png" />
-  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="theme-color" content="#060b07"/>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="icon" href="/icon-192.png"/>
+  <link rel="apple-touch-icon" href="/icon-192.png"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-    :root {
-      --bg:    #080d09;
-      --card:  #0f1610;
-      --bd:    rgba(255,255,255,.07);
-      --t1:    #eef2ee;
-      --t2:    #7a9280;
-      --t3:    #3a4f3e;
-      --green: #4ac46e;
-      --red:   #e05c5c;
-      --yel:   #e0b84a;
+    :root{
+      --bg:   #060b07;
+      --s1:   #0c1410;
+      --s2:   #111a12;
+      --bd:   rgba(255,255,255,.06);
+      --bd2:  rgba(255,255,255,.1);
+      --t1:   #e8ede8;
+      --t2:   #6b8870;
+      --t3:   #334437;
+      --g:    #4ac46e;
+      --r:    #e05c5c;
+      --y:    #d4a843;
     }
 
-    body {
-      background: var(--bg);
-      color: var(--t1);
-      font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif;
-      min-height: 100dvh;
-      padding-top: env(safe-area-inset-top, 16px);
-      padding-bottom: env(safe-area-inset-bottom, 0);
+    body{
+      background:var(--bg);
+      color:var(--t1);
+      font-family:-apple-system,'SF Pro Text',system-ui,sans-serif;
+      min-height:100dvh;
+      padding-top:env(safe-area-inset-top,20px);
+      padding-bottom:env(safe-area-inset-bottom,0);
+      -webkit-font-smoothing:antialiased;
     }
 
-    .page { max-width: 430px; margin: 0 auto; padding: 16px 16px 48px; }
+    .page{max-width:430px;margin:0 auto;padding:0 16px 52px}
 
-    /* ── Header ── */
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .hlogo  { display: flex; align-items: center; gap: 10px; }
-    .hicon  {
-      width: 38px; height: 38px; border-radius: 11px;
-      background: linear-gradient(145deg, #162219, #0c1410);
-      border: 1px solid rgba(74,196,110,.18);
-      display: flex; align-items: center; justify-content: center;
+    /* ─ Header ─ */
+    .hdr{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:16px 0 20px;
     }
-    .htitle { font-size: 20px; font-weight: 800; letter-spacing: -.4px; }
-    .hsub   { font-size: 11px; color: var(--t3); margin-top: 1px; }
-
-    .refresh-btn {
-      display: flex; align-items: center; gap: 5px;
-      background: var(--card); border: 1px solid var(--bd);
-      color: var(--t2); border-radius: 20px; padding: 7px 13px;
-      font-size: 12px; font-weight: 600; cursor: pointer;
-      -webkit-tap-highlight-color: transparent; font-family: inherit;
-      transition: opacity .15s;
+    .hdr-l{display:flex;align-items:center;gap:12px}
+    .hdr-logo{width:42px;height:42px;border-radius:13px;overflow:hidden;flex-shrink:0}
+    .hdr-logo img{width:100%;height:100%;display:block}
+    .hdr-name{font-size:18px;font-weight:800;letter-spacing:-.3px}
+    .hdr-sub{font-size:11px;color:var(--t3);margin-top:2px;letter-spacing:.01em}
+    .hdr-btn{
+      display:flex;align-items:center;gap:5px;
+      background:var(--s1);border:1px solid var(--bd2);
+      color:var(--t2);border-radius:22px;padding:7px 13px;
+      font-size:12px;font-weight:600;cursor:pointer;
+      font-family:inherit;-webkit-tap-highlight-color:transparent;
+      transition:opacity .12s;
     }
-    .refresh-btn:active { opacity: .6; }
-    #countdown { font-variant-numeric: tabular-nums; min-width: 22px; text-align: right; }
+    .hdr-btn:active{opacity:.55}
+    #cd{font-variant-numeric:tabular-nums;min-width:22px;text-align:right}
 
-    /* ── Banner ── */
-    .banner {
-      display: flex; align-items: center; gap: 10px;
-      padding: 13px 16px; border-radius: 16px; margin-bottom: 20px;
-      font-size: 14px; font-weight: 700; transition: all .3s;
+    /* ─ Hero status ─ */
+    .hero{
+      border-radius:20px;padding:20px 20px 18px;
+      margin-bottom:14px;position:relative;overflow:hidden;
+      transition:background .4s,border-color .4s;
     }
-    .ok  { background: rgba(74,196,110,.1);  border: 1px solid rgba(74,196,110,.18); color: var(--green); }
-    .err { background: rgba(224,92,92,.1);   border: 1px solid rgba(224,92,92,.22);  color: var(--red); }
-    .loading { background: var(--card); border: 1px solid var(--bd); color: var(--t2); }
-    .banner-ts { margin-left: auto; font-size: 11px; font-weight: 500; opacity: .65; font-variant-numeric: tabular-nums; }
-
-    /* ── Dot ── */
-    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
-    .d-ok  { background: var(--green); box-shadow: 0 0 8px rgba(74,196,110,.6); animation: p-ok 2.5s ease infinite; }
-    .d-err { background: var(--red);   box-shadow: 0 0 8px rgba(224,92,92,.6);  animation: p-err 1.5s ease infinite; }
-    .d-neu { background: var(--t3); }
-    @keyframes p-ok  { 0%,100%{ box-shadow:0 0 5px rgba(74,196,110,.4) } 50%{ box-shadow:0 0 14px rgba(74,196,110,.9) } }
-    @keyframes p-err { 0%,100%{ box-shadow:0 0 5px rgba(224,92,92,.4) }  50%{ box-shadow:0 0 14px rgba(224,92,92,.9) } }
-
-    /* ── Section label ── */
-    .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--t3); margin: 0 0 10px 2px; }
-
-    /* ── Latency card (full width — API & Frontend) ── */
-    .lat-card {
-      background: var(--card);
-      border: 1px solid var(--bd);
-      border-radius: 18px;
-      padding: 18px 18px 16px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
+    .hero-ok {background:linear-gradient(135deg,rgba(74,196,110,.12),rgba(74,196,110,.04));border:1px solid rgba(74,196,110,.2)}
+    .hero-err{background:linear-gradient(135deg,rgba(224,92,92,.12),rgba(224,92,92,.04));border:1px solid rgba(224,92,92,.2)}
+    .hero-load{background:var(--s1);border:1px solid var(--bd)}
+    .hero-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .hero-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t2)}
+    .hero-status{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1}
+    .hero-ok  .hero-status{color:var(--g)}
+    .hero-err .hero-status{color:var(--r)}
+    .hero-load .hero-status{color:var(--t2)}
+    .hero-ts{font-size:11px;color:var(--t3);margin-top:4px;font-variant-numeric:tabular-nums}
+    .hero-checks{
+      display:flex;gap:4px;flex-wrap:wrap;margin-top:14px;
     }
-    .lat-card-left { flex: 1; min-width: 0; }
-    .lat-name-row  { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
-    .lat-name  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--t2); }
-    .lat-val   { font-size: 42px; font-weight: 800; letter-spacing: -1px; line-height: 1; color: var(--t1); }
-    .lat-unit  { font-size: 18px; font-weight: 600; color: var(--t2); }
-    .lat-sub   { font-size: 11px; color: var(--t3); margin-top: 5px; }
-    .lat-bar   { height: 4px; background: rgba(255,255,255,.06); border-radius: 2px; overflow: hidden; margin-top: 10px; }
-    .lat-fill  { height: 100%; border-radius: 2px; transition: width .6s cubic-bezier(.4,0,.2,1), background .4s; }
+    .hc{width:20px;height:6px;border-radius:3px;background:var(--s2);transition:background .3s}
+    .hc-ok {background:var(--g);opacity:.8}
+    .hc-err{background:var(--r)}
 
-    .lat-card-right { flex-shrink: 0; text-align: center; }
-    .tag {
-      font-size: 11px; font-weight: 700; border-radius: 8px; padding: 4px 10px;
-      display: inline-block;
-    }
-    .t-ok  { background: rgba(74,196,110,.15); color: var(--green); }
-    .t-err { background: rgba(224,92,92,.15);  color: var(--red); }
-    .t-neu { background: rgba(255,255,255,.06); color: var(--t3); }
+    /* ─ Dot ─ */
+    .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
+    .d-ok {background:var(--g);box-shadow:0 0 8px rgba(74,196,110,.7);animation:p-ok 2.5s ease infinite}
+    .d-err{background:var(--r);box-shadow:0 0 8px rgba(224,92,92,.7);animation:p-err 1.6s ease infinite}
+    .d-neu{background:var(--t3)}
+    @keyframes p-ok {0%,100%{box-shadow:0 0 5px rgba(74,196,110,.4)}50%{box-shadow:0 0 14px rgba(74,196,110,.9)}}
+    @keyframes p-err{0%,100%{box-shadow:0 0 5px rgba(224,92,92,.4)}50%{box-shadow:0 0 14px rgba(224,92,92,.9)}}
 
-    /* ── Small cards row (DB + Sessão) ── */
-    .small-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
+    /* ─ Metric cards ─ */
+    .metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+    .m-card{
+      background:var(--s1);border:1px solid var(--bd);
+      border-radius:16px;padding:14px 12px;
     }
-    .small-card {
-      background: var(--card);
-      border: 1px solid var(--bd);
-      border-radius: 18px;
-      padding: 16px;
-    }
-    .sc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .sc-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--t2); display: flex; align-items: center; gap: 7px; }
-    .sc-val  { font-size: 26px; font-weight: 800; color: var(--t1); line-height: 1; }
-    .sc-sub  { font-size: 11px; color: var(--t3); margin-top: 4px; }
+    .m-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:8px}
+    .m-val{font-size:24px;font-weight:800;color:var(--t1);line-height:1;font-variant-numeric:tabular-nums}
+    .m-unit{font-size:12px;font-weight:600;color:var(--t2)}
+    .m-sub{font-size:10px;color:var(--t3);margin-top:3px}
 
-    /* ── History ── */
-    .hist-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
-    .hist-item {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--card); border: 1px solid var(--bd);
-      border-radius: 12px; padding: 11px 14px;
-    }
-    .hist-time   { font-size: 11px; color: var(--t3); font-variant-numeric: tabular-nums; min-width: 56px; }
-    .hist-status { flex: 1; font-size: 12px; font-weight: 700; }
-    .hist-ms     { font-size: 11px; font-variant-numeric: tabular-nums; min-width: 46px; text-align: right; }
-    .ok-t  { color: var(--green); }
-    .err-t { color: var(--red); }
+    /* ─ Service rows ─ */
+    .sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin:0 0 8px 2px}
+    .svc-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
 
-    /* ── Spinner / Footer ── */
-    .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.1); border-top-color: var(--green); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .footer { text-align: center; font-size: 11px; color: var(--t3); }
-    .footer b { color: var(--green); }
+    .svc-row{
+      background:var(--s1);border:1px solid var(--bd);
+      border-radius:16px;padding:14px 16px;
+      display:flex;align-items:center;gap:12px;
+      position:relative;overflow:hidden;
+    }
+    .svc-row::before{
+      content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;
+      background:var(--t3);transition:background .3s;
+    }
+    .svc-ok::before {background:var(--g)}
+    .svc-err::before{background:var(--r)}
+
+    .svc-info{flex:1;min-width:0}
+    .svc-name{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:7px;margin-bottom:4px}
+    .svc-detail{font-size:11px;color:var(--t3)}
+    .svc-bar{height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-top:7px}
+    .svc-fill{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1),background .4s}
+
+    .svc-ms{
+      font-size:28px;font-weight:800;color:var(--t1);
+      font-variant-numeric:tabular-nums;letter-spacing:-1px;
+      flex-shrink:0;line-height:1;text-align:right;
+    }
+    .svc-ms small{font-size:13px;font-weight:600;color:var(--t2)}
+
+    /* ─ DB + Session ─ */
+    .pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+    .p-card{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:14px}
+    .p-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .p-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);display:flex;align-items:center;gap:6px}
+    .p-val{font-size:22px;font-weight:800;color:var(--t1);line-height:1}
+    .p-sub{font-size:10px;color:var(--t3);margin-top:3px}
+    .badge{font-size:10px;font-weight:700;border-radius:6px;padding:2px 7px}
+    .b-ok {background:rgba(74,196,110,.14);color:var(--g)}
+    .b-err{background:rgba(224,92,92,.14);color:var(--r)}
+    .b-neu{background:rgba(255,255,255,.05);color:var(--t3)}
+
+    /* ─ History ─ */
+    .hist{display:flex;flex-direction:column;gap:5px}
+    .h-row{
+      display:flex;align-items:center;gap:10px;
+      background:var(--s1);border:1px solid var(--bd);
+      border-radius:12px;padding:10px 14px;
+    }
+    .h-time{font-size:11px;color:var(--t3);font-variant-numeric:tabular-nums;min-width:56px}
+    .h-st{flex:1;font-size:12px;font-weight:700}
+    .h-ms{font-size:11px;font-variant-numeric:tabular-nums;min-width:48px;text-align:right}
+    .ok-t {color:var(--g)}
+    .err-t{color:var(--r)}
+
+    /* ─ Footer ─ */
+    .footer{text-align:center;font-size:11px;color:var(--t3);padding-top:16px}
+    .footer b{color:var(--g)}
+
+    /* ─ Spinner ─ */
+    .spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.08);border-top-color:var(--g);border-radius:50%;animation:rot .7s linear infinite;flex-shrink:0}
+    @keyframes rot{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
 <div class="page">
 
   <!-- Header -->
-  <div class="header">
-    <div class="hlogo">
-      <div class="hicon">
-        <img src="/logo.png" alt="Monitor" style="width:38px;height:38px;border-radius:11px;display:block;" />
-      </div>
+  <div class="hdr">
+    <div class="hdr-l">
+      <div class="hdr-logo"><img src="/logo.png" alt="Monitor"/></div>
       <div>
-        <div class="htitle">Monitor</div>
-        <div class="hsub">Finance · Cloud Run</div>
+        <div class="hdr-name">Monitor</div>
+        <div class="hdr-sub">finance-app · Cloud Run</div>
       </div>
     </div>
-    <button class="refresh-btn" onclick="check()">
+    <button class="hdr-btn" onclick="check()">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
         <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
         <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
       </svg>
-      <span id="countdown">30s</span>
+      <span id="cd">30s</span>
     </button>
   </div>
 
-  <!-- Banner -->
-  <div class="banner loading" id="banner">
-    <span class="dot d-neu" id="banner-dot"></span>
-    <span id="banner-text">Verificando sistemas...</span>
-    <span class="banner-ts" id="banner-ts"></span>
-  </div>
-
-  <!-- Serviços -->
-  <div class="label">Serviços</div>
-
-  <!-- API -->
-  <div class="lat-card" id="api-card">
-    <div class="lat-card-left">
-      <div class="lat-name-row">
-        <span class="dot d-neu" id="api-dot"></span>
-        <span class="lat-name">API</span>
-      </div>
-      <div><span class="lat-val" id="api-ms">—</span><span class="lat-unit" id="api-unit"></span></div>
-      <div class="lat-sub" id="api-sub">aguardando...</div>
-      <div class="lat-bar"><div class="lat-fill" id="api-bar" style="width:0"></div></div>
+  <!-- Hero -->
+  <div class="hero hero-load" id="hero">
+    <div class="hero-top">
+      <span class="dot d-neu" id="h-dot"></span>
+      <span class="hero-label">Status geral</span>
     </div>
-    <div class="lat-card-right">
-      <span class="tag t-neu" id="api-tag">—</span>
+    <div class="hero-status" id="h-status">Verificando...</div>
+    <div class="hero-ts" id="h-ts">—</div>
+    <div class="hero-checks" id="h-checks">
+      <!-- 20 ping dots -->
     </div>
   </div>
 
-  <!-- Frontend -->
-  <div class="lat-card" id="front-card">
-    <div class="lat-card-left">
-      <div class="lat-name-row">
-        <span class="dot d-neu" id="front-dot"></span>
-        <span class="lat-name">Frontend</span>
-      </div>
-      <div><span class="lat-val" id="front-ms">—</span><span class="lat-unit" id="front-unit"></span></div>
-      <div class="lat-sub" id="front-sub">aguardando...</div>
-      <div class="lat-bar"><div class="lat-fill" id="front-bar" style="width:0"></div></div>
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="m-card">
+      <div class="m-lbl">API</div>
+      <div class="m-val" id="m-api">—<span class="m-unit"></span></div>
+      <div class="m-sub" id="m-api-sub">—</div>
     </div>
-    <div class="lat-card-right">
-      <span class="tag t-neu" id="front-tag">—</span>
+    <div class="m-card">
+      <div class="m-lbl">Frontend</div>
+      <div class="m-val" id="m-front">—<span class="m-unit"></span></div>
+      <div class="m-sub" id="m-front-sub">—</div>
+    </div>
+    <div class="m-card">
+      <div class="m-lbl">Checks</div>
+      <div class="m-val" id="m-checks">0</div>
+      <div class="m-sub">esta sessão</div>
     </div>
   </div>
 
-  <!-- DB + Sessão -->
-  <div class="small-row">
-    <div class="small-card" id="db-card">
-      <div class="sc-top">
-        <span class="sc-name"><span class="dot d-neu" id="db-dot"></span>Banco</span>
-        <span class="tag t-neu" id="db-tag">—</span>
+  <!-- Services -->
+  <div class="sec-lbl">Serviços</div>
+  <div class="svc-list">
+    <!-- API -->
+    <div class="svc-row" id="api-row">
+      <div class="svc-info">
+        <div class="svc-name"><span class="dot d-neu" id="api-dot"></span>API</div>
+        <div class="svc-detail" id="api-detail">aguardando...</div>
+        <div class="svc-bar"><div class="svc-fill" id="api-bar" style="width:0"></div></div>
       </div>
-      <div class="sc-val" id="db-val">—</div>
-      <div class="sc-sub">Neon PostgreSQL</div>
+      <div class="svc-ms" id="api-ms">—</div>
     </div>
 
-    <div class="small-card">
-      <div class="sc-top">
-        <span class="sc-name">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round">
+    <!-- Frontend -->
+    <div class="svc-row" id="front-row">
+      <div class="svc-info">
+        <div class="svc-name"><span class="dot d-neu" id="front-dot"></span>Frontend</div>
+        <div class="svc-detail" id="front-detail">aguardando...</div>
+        <div class="svc-bar"><div class="svc-fill" id="front-bar" style="width:0"></div></div>
+      </div>
+      <div class="svc-ms" id="front-ms">—</div>
+    </div>
+  </div>
+
+  <!-- DB + Session -->
+  <div class="pair">
+    <div class="p-card" id="db-card">
+      <div class="p-top">
+        <span class="p-name"><span class="dot d-neu" id="db-dot"></span>Banco</span>
+        <span class="badge b-neu" id="db-badge">—</span>
+      </div>
+      <div class="p-val" id="db-val">—</div>
+      <div class="p-sub">Neon PostgreSQL</div>
+    </div>
+
+    <div class="p-card">
+      <div class="p-top">
+        <span class="p-name">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="2.5" stroke-linecap="round">
             <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
           </svg>
           Sessão
         </span>
       </div>
-      <div class="sc-val" id="session-val">0</div>
-      <div class="sc-sub">checks OK</div>
+      <div class="p-val" id="sess-val">0</div>
+      <div class="p-sub">checks OK</div>
     </div>
   </div>
 
-  <!-- Histórico -->
-  <div class="label">Últimas verificações</div>
-  <div class="hist-list" id="hist-list">
-    <div class="hist-item">
-      <span class="hist-time" style="color:var(--t3);font-size:12px">Aguardando primeira verificação...</span>
-    </div>
+  <!-- History -->
+  <div class="sec-lbl">Histórico</div>
+  <div class="hist" id="hist">
+    <div class="h-row"><span class="h-time" style="color:var(--t3)">Aguardando...</span></div>
   </div>
 
   <div class="footer">Auto-refresh <b>30s</b> · Finance Monitor</div>
-
 </div>
+
 <script>
   const REFRESH = 30
-  let timer = REFRESH, hist = [], checks = 0
+  let timer = REFRESH, hist = [], checks = 0, pings = []
 
-  const latColor = ms => ms < 400 ? 'var(--green)' : ms < 1200 ? 'var(--yel)' : 'var(--red)'
-  const latPct   = ms => Math.min(100, (ms / 2000) * 100)
-  const fmtTime  = iso => new Date(iso).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit', second:'2-digit' })
+  const lc  = ms => ms < 400 ? 'var(--g)' : ms < 1200 ? 'var(--y)' : 'var(--r)'
+  const lp  = ms => Math.min(100, (ms / 2000) * 100)
+  const fmt = iso => new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})
 
-  function dot(id, s) { document.getElementById(id).className = `dot d-${s}` }
-  function tag(id, cls, txt) { const e = document.getElementById(id); e.className = `tag t-${cls}`; e.textContent = txt }
+  function dot(id, s){ document.getElementById(id).className = `dot d-${s}` }
+  function badge(id, cls, txt){ const e=document.getElementById(id); e.className=`badge b-${cls}`; e.textContent=txt }
 
-  function setLatCard(prefix, check) {
-    dot(`${prefix}-dot`, check.ok ? 'ok' : 'err')
-    tag(`${prefix}-tag`, check.ok ? 'ok' : 'err', check.ok ? 'Online' : 'Offline')
-    if (check.ok) {
-      document.getElementById(`${prefix}-ms`).textContent = check.ms
-      document.getElementById(`${prefix}-unit`).textContent = 'ms'
-    } else {
-      document.getElementById(`${prefix}-ms`).textContent = '—'
-      document.getElementById(`${prefix}-unit`).textContent = ''
-    }
-    document.getElementById(`${prefix}-sub`).textContent = check.ok
-      ? `HTTP ${check.status} · ${prefix === 'api' ? 'Cloud Run' : 'React/Vite'}`
-      : (check.detail || 'Sem resposta')
-    document.getElementById(`${prefix}-bar`).style.width      = `${latPct(check.ms)}%`
-    document.getElementById(`${prefix}-bar`).style.background = latColor(check.ms)
+  function setSvc(prefix, ck) {
+    dot(`${prefix}-dot`, ck.ok ? 'ok' : 'err')
+    document.getElementById(`${prefix}-row`).className = `svc-row svc-${ck.ok?'ok':'err'}`
+    document.getElementById(`${prefix}-detail`).textContent = ck.ok
+      ? `HTTP ${ck.status} · ${prefix==='api'?'Cloud Run':'React/Vite'}`
+      : (ck.detail || 'Sem resposta')
+    document.getElementById(`${prefix}-ms`).innerHTML = ck.ok
+      ? `${ck.ms}<small>ms</small>` : '<small style="font-size:18px">—</small>'
+    document.getElementById(`${prefix}-bar`).style.width = `${lp(ck.ms)}%`
+    document.getElementById(`${prefix}-bar`).style.background = lc(ck.ms)
+    // metric row
+    const mv = document.getElementById(`m-${prefix}`)
+    mv.innerHTML = ck.ok ? `${ck.ms}<span class="m-unit">ms</span>` : '—'
+    document.getElementById(`m-${prefix}-sub`).textContent = ck.ok
+      ? (ck.ms < 400 ? 'Rápido' : ck.ms < 1200 ? 'Normal' : 'Lento') : 'Offline'
+  }
+
+  function renderPings() {
+    const container = document.getElementById('h-checks')
+    // show last 20, newest right
+    const recent = pings.slice(-20)
+    container.innerHTML = recent.map(ok =>
+      `<div class="hc ${ok?'hc-ok':'hc-err'}"></div>`
+    ).join('') + Array(Math.max(0,20-recent.length)).fill('<div class="hc"></div>').join('')
   }
 
   async function check() {
     timer = REFRESH
-    document.getElementById('countdown').textContent = `${REFRESH}s`
-    const banner = document.getElementById('banner')
-    banner.className = 'banner loading'
-    dot('banner-dot', 'neu')
-    document.getElementById('banner-text').textContent = 'Verificando...'
+    document.getElementById('cd').textContent = `${REFRESH}s`
 
     try {
-      const data = await fetch('/api/status').then(r => r.json())
-      const api  = data.checks.find(c => c.name === 'API + DB')
-      const front = data.checks.find(c => c.name === 'Frontend')
+      const data  = await fetch('/api/status').then(r=>r.json())
+      const api   = data.checks.find(c=>c.name==='API + DB')
+      const front = data.checks.find(c=>c.name==='Frontend')
       checks++
+      pings.push(data.ok)
+      if (pings.length > 20) pings.shift()
 
-      // Banner
-      banner.className = `banner ${data.ok ? 'ok' : 'err'}`
-      dot('banner-dot', data.ok ? 'ok' : 'err')
-      document.getElementById('banner-text').textContent = data.ok ? 'Todos os sistemas operacionais' : 'Degradação detectada'
-      document.getElementById('banner-ts').textContent = fmtTime(data.ts)
+      // Hero
+      const hero = document.getElementById('hero')
+      hero.className = `hero hero-${data.ok?'ok':'err'}`
+      dot('h-dot', data.ok?'ok':'err')
+      document.getElementById('h-status').textContent = data.ok ? 'Todos os sistemas operacionais' : 'Degradação detectada'
+      document.getElementById('h-ts').textContent = `Atualizado às ${fmt(data.ts)}`
+      renderPings()
 
-      if (api)   setLatCard('api',   api)
-      if (front) setLatCard('front', front)
+      // Services
+      if (api)   setSvc('api',   api)
+      if (front) setSvc('front', front)
 
       // DB
       const dbOk  = api?.dbStatus === 'ok'
       const dbDeg = api?.dbStatus === 'degraded'
-      dot('db-dot', dbOk ? 'ok' : 'err')
-      tag('db-tag', dbOk ? 'ok' : 'err', dbOk ? 'Online' : dbDeg ? 'Falha' : 'Offline')
-      document.getElementById('db-val').textContent = dbOk ? 'Online' : dbDeg ? 'Falha' : 'Offline'
+      dot('db-dot', dbOk?'ok':'err')
+      badge('db-badge', dbOk?'ok':'err', dbOk?'Online':dbDeg?'Falha':'Offline')
+      document.getElementById('db-val').textContent = dbOk?'Online':dbDeg?'Falha':'Offline'
 
-      // Sessão
-      document.getElementById('session-val').textContent = checks
+      // Session + checks metric
+      document.getElementById('sess-val').textContent = checks
+      document.getElementById('m-checks').textContent = checks
 
-      // Histórico
-      hist.unshift({ ts: data.ts, ok: data.ok, ms: api?.ms ?? 0, db: dbOk })
+      // History
+      hist.unshift({ts:data.ts, ok:data.ok, ms:api?.ms??0, db:dbOk})
       if (hist.length > 8) hist.pop()
-      document.getElementById('hist-list').innerHTML = hist.map(h => `
-        <div class="hist-item">
-          <span class="hist-time">${fmtTime(h.ts)}</span>
-          <span class="hist-status ${h.ok ? 'ok-t' : 'err-t'}">${h.ok ? '✓ OK' : '✗ Falha'} · DB ${h.db ? 'OK' : '⚠ Falha'}</span>
-          <span class="hist-ms" style="color:${latColor(h.ms)}">${h.ms}ms</span>
+      document.getElementById('hist').innerHTML = hist.map(h=>`
+        <div class="h-row">
+          <span class="h-time">${fmt(h.ts)}</span>
+          <span class="h-st ${h.ok?'ok-t':'err-t'}">${h.ok?'✓ OK':'✗ Falha'} · DB ${h.db?'OK':'⚠ Falha'}</span>
+          <span class="h-ms" style="color:${lc(h.ms)}">${h.ms}ms</span>
         </div>`).join('')
 
     } catch {
-      banner.className = 'banner err'
-      dot('banner-dot', 'err')
-      document.getElementById('banner-text').textContent = 'Sem resposta do monitor'
+      document.getElementById('hero').className = 'hero hero-err'
+      document.getElementById('h-status').textContent = 'Monitor sem resposta'
     }
   }
 
-  setInterval(() => {
+  // Init ping dots
+  renderPings()
+
+  setInterval(()=>{
     timer--
-    if (timer <= 0) { check(); return }
-    document.getElementById('countdown').textContent = `${timer}s`
+    if (timer<=0){ check(); return }
+    document.getElementById('cd').textContent = `${timer}s`
   }, 1000)
 
   check()
