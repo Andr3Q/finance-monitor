@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60')
 
   const checks = await Promise.all([
+    ping(`${TARGET}/ping`,    'Servidor'),
     ping(`${TARGET}/health`,  'API + DB'),
     ping(`${TARGET}/`,        'Frontend'),
   ])
