@@ -14,367 +14,860 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
     :root{
-      --bg:   #060b07;
-      --s1:   #0c1410;
-      --s2:   #111a12;
-      --bd:   rgba(255,255,255,.06);
-      --bd2:  rgba(255,255,255,.1);
-      --t1:   #e8ede8;
-      --t2:   #6b8870;
-      --t3:   #334437;
-      --g:    #4ac46e;
-      --r:    #e05c5c;
-      --y:    #d4a843;
+      --bg:  #060b07;
+      --s1:  #0c1410;
+      --s2:  #111a12;
+      --s3:  #0f1810;
+      --bd:  rgba(255,255,255,.06);
+      --bd2: rgba(255,255,255,.11);
+      --t1:  #e8ede8;
+      --t2:  #6b8870;
+      --t3:  #334437;
+      --g:   #4ac46e;
+      --r:   #e05c5c;
+      --y:   #d4a843;
     }
 
+    html,body{height:100%}
     body{
-      background:var(--bg);
-      color:var(--t1);
+      background:var(--bg);color:var(--t1);
       font-family:-apple-system,'SF Pro Text',system-ui,sans-serif;
-      min-height:100dvh;
-      padding-top:env(safe-area-inset-top,20px);
-      padding-bottom:env(safe-area-inset-bottom,0);
       -webkit-font-smoothing:antialiased;
+      padding-top:env(safe-area-inset-top,0px);
+      padding-bottom:calc(60px + env(safe-area-inset-bottom,0px));
+      overflow-x:hidden;
     }
 
-    .page{max-width:430px;margin:0 auto;padding:0 16px 52px}
+    /* ── Layout ── */
+    .page{max-width:600px;margin:0 auto;padding:0 16px}
 
-    /* ─ Header ─ */
+    /* ── Header ── */
     .hdr{
       display:flex;justify-content:space-between;align-items:center;
-      padding:16px 0 20px;
+      padding:16px 0 12px;
     }
-    .hdr-l{display:flex;align-items:center;gap:12px}
-    .hdr-logo{width:42px;height:42px;border-radius:13px;overflow:hidden;flex-shrink:0}
+    .hdr-l{display:flex;align-items:center;gap:10px}
+    .hdr-logo{width:38px;height:38px;border-radius:11px;overflow:hidden;flex-shrink:0}
     .hdr-logo img{width:100%;height:100%;display:block}
-    .hdr-name{font-size:18px;font-weight:800;letter-spacing:-.3px}
-    .hdr-sub{font-size:11px;color:var(--t3);margin-top:2px;letter-spacing:.01em}
+    .hdr-name{font-size:17px;font-weight:800;letter-spacing:-.3px}
+    .hdr-sub{font-size:10px;color:var(--t3);margin-top:1px}
     .hdr-btn{
       display:flex;align-items:center;gap:5px;
       background:var(--s1);border:1px solid var(--bd2);
-      color:var(--t2);border-radius:22px;padding:7px 13px;
-      font-size:12px;font-weight:600;cursor:pointer;
-      font-family:inherit;-webkit-tap-highlight-color:transparent;
-      transition:opacity .12s;
+      color:var(--t2);border-radius:20px;padding:6px 12px;
+      font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s;
     }
     .hdr-btn:active{opacity:.55}
-    #cd{font-variant-numeric:tabular-nums;min-width:22px;text-align:right}
+    #cd{font-variant-numeric:tabular-nums;min-width:20px;text-align:right}
 
-    /* ─ Hero status ─ */
-    .hero{
-      border-radius:20px;padding:20px 20px 18px;
-      margin-bottom:14px;position:relative;overflow:hidden;
-      transition:background .4s,border-color .4s;
+    /* ── Bottom Tab Bar ── */
+    .tab-bar{
+      position:fixed;bottom:0;left:0;right:0;z-index:100;
+      background:rgba(6,11,7,.92);backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border-top:1px solid var(--bd);
+      display:flex;
+      padding-bottom:env(safe-area-inset-bottom,0px);
     }
-    .hero-ok {background:linear-gradient(135deg,rgba(74,196,110,.12),rgba(74,196,110,.04));border:1px solid rgba(74,196,110,.2)}
-    .hero-err{background:linear-gradient(135deg,rgba(224,92,92,.12),rgba(224,92,92,.04));border:1px solid rgba(224,92,92,.2)}
-    .hero-load{background:var(--s1);border:1px solid var(--bd)}
-    .hero-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-    .hero-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t2)}
-    .hero-status{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1}
-    .hero-ok  .hero-status{color:var(--g)}
-    .hero-err .hero-status{color:var(--r)}
-    .hero-load .hero-status{color:var(--t2)}
-    .hero-ts{font-size:11px;color:var(--t3);margin-top:4px;font-variant-numeric:tabular-nums}
-    .hero-checks{
-      display:flex;gap:4px;flex-wrap:wrap;margin-top:14px;
+    .tab-btn{
+      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:3px;padding:10px 0;cursor:pointer;border:none;background:none;
+      color:var(--t3);font-family:inherit;-webkit-tap-highlight-color:transparent;
+      transition:color .15s;font-size:10px;font-weight:600;
     }
-    .hc{width:20px;height:6px;border-radius:3px;background:var(--s2);transition:background .3s}
-    .hc-ok {background:var(--g);opacity:.8}
-    .hc-err{background:var(--r)}
+    .tab-btn svg{transition:opacity .15s}
+    .tab-btn.active{color:var(--g)}
+    .tab-btn.active svg{opacity:1}
+    .tab-btn svg{opacity:.4}
 
-    /* ─ Dot ─ */
+    /* ── Tab Content ── */
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+
+    /* ── Dots ── */
     .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
     .d-ok {background:var(--g);box-shadow:0 0 8px rgba(74,196,110,.7);animation:p-ok 2.5s ease infinite}
     .d-err{background:var(--r);box-shadow:0 0 8px rgba(224,92,92,.7);animation:p-err 1.6s ease infinite}
     .d-neu{background:var(--t3)}
+    .d-warn{background:var(--y);box-shadow:0 0 8px rgba(212,168,67,.6)}
     @keyframes p-ok {0%,100%{box-shadow:0 0 5px rgba(74,196,110,.4)}50%{box-shadow:0 0 14px rgba(74,196,110,.9)}}
-    @keyframes p-err{0%,100%{box-shadow:0 0 5px rgba(224,92,92,.4)}50%{box-shadow:0 0 14px rgba(224,92,92,.9)}}
+    @keyframes p-err{0%,100%{box-shadow:0 0 5px rgba(224,92,92,.4)} 50%{box-shadow:0 0 14px rgba(224,92,92,.9)}}
 
-    /* ─ Metric cards ─ */
-    .metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
-    .m-card{
-      background:var(--s1);border:1px solid var(--bd);
-      border-radius:16px;padding:14px 12px;
-    }
-    .m-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:8px}
-    .m-val{font-size:24px;font-weight:800;color:var(--t1);line-height:1;font-variant-numeric:tabular-nums}
-    .m-unit{font-size:12px;font-weight:600;color:var(--t2)}
-    .m-sub{font-size:10px;color:var(--t3);margin-top:3px}
+    /* ── Badge ── */
+    .badge{font-size:10px;font-weight:700;border-radius:6px;padding:2px 8px;letter-spacing:.02em}
+    .b-ok  {background:rgba(74,196,110,.14);color:var(--g)}
+    .b-err {background:rgba(224,92,92,.14);color:var(--r)}
+    .b-warn{background:rgba(212,168,67,.14);color:var(--y)}
+    .b-neu {background:rgba(255,255,255,.06);color:var(--t3)}
 
-    /* ─ Service rows ─ */
-    .sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin:0 0 8px 2px}
-    .svc-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-
-    .svc-row{
-      background:var(--s1);border:1px solid var(--bd);
-      border-radius:16px;padding:14px 16px;
-      display:flex;align-items:center;gap:12px;
-      position:relative;overflow:hidden;
-    }
-    .svc-row::before{
-      content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;
-      background:var(--t3);transition:background .3s;
-    }
-    .svc-ok::before {background:var(--g)}
-    .svc-err::before{background:var(--r)}
-
-    .svc-info{flex:1;min-width:0}
-    .svc-name{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:7px;margin-bottom:4px}
-    .svc-detail{font-size:11px;color:var(--t3)}
-    .svc-bar{height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;margin-top:7px}
-    .svc-fill{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1),background .4s}
-
-    .svc-ms{
-      font-size:28px;font-weight:800;color:var(--t1);
-      font-variant-numeric:tabular-nums;letter-spacing:-1px;
-      flex-shrink:0;line-height:1;text-align:right;
-    }
-    .svc-ms small{font-size:13px;font-weight:600;color:var(--t2)}
-
-    /* ─ DB + Session ─ */
-    .pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-    .p-card{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:14px}
-    .p-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .p-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);display:flex;align-items:center;gap:6px}
-    .p-val{font-size:22px;font-weight:800;color:var(--t1);line-height:1}
-    .p-sub{font-size:10px;color:var(--t3);margin-top:3px}
-    .badge{font-size:10px;font-weight:700;border-radius:6px;padding:2px 7px}
-    .b-ok {background:rgba(74,196,110,.14);color:var(--g)}
-    .b-err{background:rgba(224,92,92,.14);color:var(--r)}
-    .b-neu{background:rgba(255,255,255,.05);color:var(--t3)}
-
-    /* ─ History ─ */
-    .hist{display:flex;flex-direction:column;gap:5px}
-    .h-row{
-      display:flex;align-items:center;gap:10px;
-      background:var(--s1);border:1px solid var(--bd);
-      border-radius:12px;padding:10px 14px;
-    }
-    .h-time{font-size:11px;color:var(--t3);font-variant-numeric:tabular-nums;min-width:56px}
-    .h-st{flex:1;font-size:12px;font-weight:700}
-    .h-ms{font-size:11px;font-variant-numeric:tabular-nums;min-width:48px;text-align:right}
-    .ok-t {color:var(--g)}
-    .err-t{color:var(--r)}
-
-    /* ─ Footer ─ */
-    .footer{text-align:center;font-size:11px;color:var(--t3);padding-top:16px}
-    .footer b{color:var(--g)}
-
-    /* ─ Spinner ─ */
+    /* ── Spinner ── */
     .spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.08);border-top-color:var(--g);border-radius:50%;animation:rot .7s linear infinite;flex-shrink:0}
     @keyframes rot{to{transform:rotate(360deg)}}
+
+    /* ════════════════════════════════════
+       TAB 1 — VISÃO GERAL
+    ════════════════════════════════════ */
+
+    /* Hero */
+    .hero{
+      border-radius:20px;padding:20px;margin-bottom:12px;
+      position:relative;overflow:hidden;transition:background .4s,border-color .4s;
+    }
+    .hero-ok  {background:linear-gradient(135deg,rgba(74,196,110,.13),rgba(74,196,110,.04));border:1px solid rgba(74,196,110,.22)}
+    .hero-err {background:linear-gradient(135deg,rgba(224,92,92,.13),rgba(224,92,92,.04));border:1px solid rgba(224,92,92,.22)}
+    .hero-load{background:var(--s1);border:1px solid var(--bd)}
+
+    .hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .hero-left{display:flex;align-items:center;gap:10px}
+    .hero-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t2)}
+    .hero-status{font-size:24px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+    .hero-ok   .hero-status{color:var(--g)}
+    .hero-err  .hero-status{color:var(--r)}
+    .hero-load .hero-status{color:var(--t2)}
+
+    .hero-uptime{
+      font-size:13px;font-weight:700;color:var(--g);
+      background:rgba(74,196,110,.12);border-radius:20px;
+      padding:4px 10px;
+    }
+    .hero-ts{font-size:11px;color:var(--t3);margin-top:6px;font-variant-numeric:tabular-nums}
+
+    .hero-pings{display:flex;gap:3px;flex-wrap:nowrap;margin-top:14px;overflow:hidden}
+    .hc{flex:1;height:5px;border-radius:3px;background:var(--s2);transition:background .3s;min-width:0}
+    .hc-ok {background:var(--g);opacity:.7}
+    .hc-err{background:var(--r)}
+    .hc-warn{background:var(--y);opacity:.8}
+
+    /* Service cards grid */
+    .svc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+    .svc-card{
+      background:var(--s1);border:1px solid var(--bd);
+      border-radius:16px;padding:14px 12px;
+      display:flex;flex-direction:column;gap:6px;
+      position:relative;overflow:hidden;
+    }
+    .svc-card::after{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:var(--t3);transition:background .3s;
+    }
+    .svc-card.ok::after {background:var(--g)}
+    .svc-card.err::after{background:var(--r)}
+    .svc-card-name{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3)}
+    .svc-card-ms{font-size:22px;font-weight:800;letter-spacing:-1px;line-height:1;color:var(--t1);font-variant-numeric:tabular-nums}
+    .svc-card-ms small{font-size:10px;font-weight:600;color:var(--t2)}
+    .svc-card-status{font-size:10px;color:var(--t2)}
+    .svc-card-spark{margin-top:4px}
+
+    /* Incidents section */
+    .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px}
+    .sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3)}
+    .sec-badge{font-size:10px;font-weight:700;background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:2px 8px;color:var(--t2)}
+
+    .incident-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+    .incident-empty{
+      background:var(--s1);border:1px solid var(--bd);border-radius:14px;
+      padding:14px;text-align:center;font-size:12px;color:var(--t3);
+    }
+    .incident-row{
+      background:var(--s1);border:1px solid var(--bd);border-radius:14px;
+      padding:12px 14px;display:flex;align-items:center;gap:10px;
+    }
+    .incident-dot{width:6px;height:6px;border-radius:50%;background:var(--r);flex-shrink:0}
+    .incident-info{flex:1;min-width:0}
+    .incident-time{font-size:11px;color:var(--t2);font-variant-numeric:tabular-nums}
+    .incident-dur{font-size:12px;font-weight:700;color:var(--r)}
+
+    /* ════════════════════════════════════
+       TAB 2 — APLICAÇÕES
+    ════════════════════════════════════ */
+    .app-section{margin-bottom:20px}
+    .app-section-title{
+      font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+      color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:8px;
+    }
+    .app-section-title::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+    .app-card{
+      background:var(--s1);border:1px solid var(--bd);border-radius:18px;
+      overflow:hidden;margin-bottom:8px;
+    }
+    .app-card-head{
+      padding:16px;display:flex;align-items:center;gap:12px;
+      border-bottom:1px solid var(--bd);
+    }
+    .app-icon{
+      width:40px;height:40px;border-radius:12px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(74,196,110,.1);
+    }
+    .app-info{flex:1;min-width:0}
+    .app-name{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:2px}
+    .app-desc{font-size:11px;color:var(--t3)}
+    .app-status-badge{flex-shrink:0}
+
+    .app-card-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+
+    .app-metric-row{display:flex;align-items:center;justify-content:space-between}
+    .app-metric-label{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px}
+    .app-metric-val{font-size:13px;font-weight:700;color:var(--t1);font-variant-numeric:tabular-nums}
+    .app-metric-val.ok {color:var(--g)}
+    .app-metric-val.err{color:var(--r)}
+    .app-metric-val.warn{color:var(--y)}
+
+    .app-spark-row{
+      background:var(--s2);border-radius:10px;padding:10px 12px;
+    }
+    .app-spark-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:6px}
+
+    /* Bar chart (latency history) */
+    .bar-chart{display:flex;align-items:flex-end;gap:2px;height:32px}
+    .bar{
+      flex:1;border-radius:2px 2px 0 0;min-width:0;
+      transition:height .3s,background .3s;
+    }
+
+    /* ════════════════════════════════════
+       TAB 3 — HISTÓRICO
+    ════════════════════════════════════ */
+    .uptime-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+    .uptime-card{
+      background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:16px;
+    }
+    .uptime-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:8px}
+    .uptime-val{font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums}
+    .uptime-val.perfect{color:var(--g)}
+    .uptime-val.good   {color:var(--g);opacity:.8}
+    .uptime-val.warn   {color:var(--y)}
+    .uptime-val.bad    {color:var(--r)}
+    .uptime-sub{font-size:10px;color:var(--t3);margin-top:3px}
+
+    .timeline-wrap{
+      background:var(--s1);border:1px solid var(--bd);border-radius:16px;
+      padding:14px;margin-bottom:12px;
+    }
+    .timeline-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:10px}
+    .timeline{display:flex;gap:2px;align-items:flex-end;height:40px}
+    .tl-bar{
+      flex:1;border-radius:2px 2px 0 0;min-width:0;
+      transition:background .3s;
+    }
+
+    .hist-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+    .hist-row{
+      background:var(--s1);border:1px solid var(--bd);border-radius:12px;
+      padding:10px 14px;display:flex;align-items:center;gap:10px;
+    }
+    .hist-time{font-size:11px;color:var(--t3);font-variant-numeric:tabular-nums;min-width:60px;flex-shrink:0}
+    .hist-status{flex:1;font-size:12px;font-weight:600}
+    .hist-status.ok {color:var(--g)}
+    .hist-status.err{color:var(--r)}
+    .hist-ms{font-size:11px;font-variant-numeric:tabular-nums;flex-shrink:0;color:var(--t2)}
+
+    /* ── Footer ── */
+    .footer{text-align:center;font-size:11px;color:var(--t3);padding:12px 0 4px}
+
+    /* ── Responsive desktop ── */
+    @media(min-width:600px){
+      .svc-grid{grid-template-columns:1fr 1fr 1fr}
+      .uptime-grid{grid-template-columns:repeat(4,1fr)}
+      .tab-bar{justify-content:center;gap:0}
+      .tab-btn{max-width:120px}
+    }
   </style>
 </head>
 <body>
+
 <div class="page">
 
-  <!-- Header -->
+  <!-- ── Header ── -->
   <div class="hdr">
     <div class="hdr-l">
       <div class="hdr-logo"><img src="/logo.png" alt="Monitor"/></div>
       <div>
-        <div class="hdr-name">Monitor</div>
-        <div class="hdr-sub">finance-app · Cloud Run</div>
+        <div class="hdr-name">Finance Monitor</div>
+        <div class="hdr-sub">Cloud Run · Neon · Vercel</div>
       </div>
     </div>
-    <button class="hdr-btn" onclick="check()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <button class="hdr-btn" onclick="forceCheck()">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
         <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
         <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
       </svg>
-      <span id="cd">30s</span>
+      <span id="cd">–</span>
     </button>
   </div>
 
-  <!-- Hero -->
-  <div class="hero hero-load" id="hero">
-    <div class="hero-top">
-      <span class="dot d-neu" id="h-dot"></span>
-      <span class="hero-label">Status geral</span>
-    </div>
-    <div class="hero-status" id="h-status">Verificando...</div>
-    <div class="hero-ts" id="h-ts">—</div>
-    <div class="hero-checks" id="h-checks">
-      <!-- 20 ping dots -->
-    </div>
-  </div>
+  <!-- ════════ TAB 1: VISÃO GERAL ════════ -->
+  <div class="tab-content active" id="tab-overview">
 
-  <!-- Metrics -->
-  <div class="metrics">
-    <div class="m-card">
-      <div class="m-lbl">API</div>
-      <div class="m-val" id="m-api">—<span class="m-unit"></span></div>
-      <div class="m-sub" id="m-api-sub">—</div>
-    </div>
-    <div class="m-card">
-      <div class="m-lbl">Frontend</div>
-      <div class="m-val" id="m-front">—<span class="m-unit"></span></div>
-      <div class="m-sub" id="m-front-sub">—</div>
-    </div>
-    <div class="m-card">
-      <div class="m-lbl">Checks</div>
-      <div class="m-val" id="m-checks">0</div>
-      <div class="m-sub">esta sessão</div>
-    </div>
-  </div>
-
-  <!-- Services -->
-  <div class="sec-lbl">Serviços</div>
-  <div class="svc-list">
-    <!-- API -->
-    <div class="svc-row" id="api-row">
-      <div class="svc-info">
-        <div class="svc-name"><span class="dot d-neu" id="api-dot"></span>API</div>
-        <div class="svc-detail" id="api-detail">aguardando...</div>
-        <div class="svc-bar"><div class="svc-fill" id="api-bar" style="width:0"></div></div>
+    <!-- Hero -->
+    <div class="hero hero-load" id="hero">
+      <div class="hero-top">
+        <div class="hero-left">
+          <span class="dot d-neu" id="h-dot"></span>
+          <span class="hero-label">Status geral</span>
+        </div>
+        <span class="hero-uptime" id="h-uptime">–%</span>
       </div>
-      <div class="svc-ms" id="api-ms">—</div>
+      <div class="hero-status" id="h-status">Verificando…</div>
+      <div class="hero-ts" id="h-ts">–</div>
+      <div class="hero-pings" id="h-pings"></div>
+    </div>
+
+    <!-- 3 Service cards -->
+    <div class="svc-grid">
+      <div class="svc-card" id="card-servidor">
+        <div class="svc-card-name">Servidor</div>
+        <div class="svc-card-ms" id="ms-servidor">–</div>
+        <div class="svc-card-status" id="st-servidor">aguardando</div>
+        <div class="svc-card-spark" id="sp-servidor"></div>
+      </div>
+      <div class="svc-card" id="card-apidb">
+        <div class="svc-card-name">API + DB</div>
+        <div class="svc-card-ms" id="ms-apidb">–</div>
+        <div class="svc-card-status" id="st-apidb">aguardando</div>
+        <div class="svc-card-spark" id="sp-apidb"></div>
+      </div>
+      <div class="svc-card" id="card-frontend">
+        <div class="svc-card-name">Frontend</div>
+        <div class="svc-card-ms" id="ms-frontend">–</div>
+        <div class="svc-card-status" id="st-frontend">aguardando</div>
+        <div class="svc-card-spark" id="sp-frontend"></div>
+      </div>
+    </div>
+
+    <!-- Incidentes recentes -->
+    <div class="sec-hdr">
+      <span class="sec-title">Incidentes recentes</span>
+      <span class="sec-badge" id="inc-count">–</span>
+    </div>
+    <div class="incident-list" id="incident-list">
+      <div class="incident-empty">Aguardando dados…</div>
+    </div>
+
+    <div class="footer">Atualização automática a cada <b style="color:var(--g)">30s</b></div>
+  </div>
+
+  <!-- ════════ TAB 2: APLICAÇÕES ════════ -->
+  <div class="tab-content" id="tab-apps">
+
+    <!-- Backend -->
+    <div class="app-section" style="margin-top:8px">
+      <div class="app-section-title">Backend</div>
+
+      <!-- Cloud Run -->
+      <div class="app-card">
+        <div class="app-card-head">
+          <div class="app-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.8" stroke-linecap="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <div class="app-info">
+            <div class="app-name">Cloud Run</div>
+            <div class="app-desc">Node.js · Express · southamerica-east1</div>
+          </div>
+          <div class="app-status-badge"><span class="badge b-neu" id="cr-badge">–</span></div>
+        </div>
+        <div class="app-card-body">
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Latência (ping)
+            </span>
+            <span class="app-metric-val" id="cr-ms">–</span>
+          </div>
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Instâncias mínimas
+            </span>
+            <span class="app-metric-val ok">1 (warm)</span>
+          </div>
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Uptime 24h
+            </span>
+            <span class="app-metric-val" id="cr-uptime">–</span>
+          </div>
+          <div class="app-spark-row">
+            <div class="app-spark-label">Latência — últimos 20 checks</div>
+            <div class="bar-chart" id="bc-servidor"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API + DB -->
+      <div class="app-card">
+        <div class="app-card-head">
+          <div class="app-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.8" stroke-linecap="round">
+              <path d="M4 6c0 1.7 3.6 3 8 3s8-1.3 8-3-3.6-3-8-3-8 1.3-8 3z"/>
+              <path d="M4 6v4c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 10v4c0 1.7 3.6 3 8 3s8-1.3 8-3v-4"/>
+            </svg>
+          </div>
+          <div class="app-info">
+            <div class="app-name">API + Banco de Dados</div>
+            <div class="app-desc">Express routes · Neon PostgreSQL</div>
+          </div>
+          <div class="app-status-badge"><span class="badge b-neu" id="api-badge">–</span></div>
+        </div>
+        <div class="app-card-body">
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Latência (health)
+            </span>
+            <span class="app-metric-val" id="api-ms">–</span>
+          </div>
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6c0 1.7 3.6 3 8 3s8-1.3 8-3-3.6-3-8-3-8 1.3-8 3z"/></svg>
+              Neon PostgreSQL
+            </span>
+            <span class="app-metric-val" id="api-db">–</span>
+          </div>
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Uptime 24h
+            </span>
+            <span class="app-metric-val" id="api-uptime">–</span>
+          </div>
+          <div class="app-spark-row">
+            <div class="app-spark-label">Latência — últimos 20 checks</div>
+            <div class="bar-chart" id="bc-apidb"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Frontend -->
-    <div class="svc-row" id="front-row">
-      <div class="svc-info">
-        <div class="svc-name"><span class="dot d-neu" id="front-dot"></span>Frontend</div>
-        <div class="svc-detail" id="front-detail">aguardando...</div>
-        <div class="svc-bar"><div class="svc-fill" id="front-bar" style="width:0"></div></div>
+    <div class="app-section">
+      <div class="app-section-title">Frontend</div>
+
+      <div class="app-card">
+        <div class="app-card-head">
+          <div class="app-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.8" stroke-linecap="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <div class="app-info">
+            <div class="app-name">Frontend</div>
+            <div class="app-desc">React 18 · Vite 6 · PWA</div>
+          </div>
+          <div class="app-status-badge"><span class="badge b-neu" id="fe-badge">–</span></div>
+        </div>
+        <div class="app-card-body">
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Tempo de carga
+            </span>
+            <span class="app-metric-val" id="fe-ms">–</span>
+          </div>
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
+              HTTP Status
+            </span>
+            <span class="app-metric-val" id="fe-http">–</span>
+          </div>
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Uptime 24h
+            </span>
+            <span class="app-metric-val" id="fe-uptime">–</span>
+          </div>
+          <div class="app-spark-row">
+            <div class="app-spark-label">Latência — últimos 20 checks</div>
+            <div class="bar-chart" id="bc-frontend"></div>
+          </div>
+        </div>
       </div>
-      <div class="svc-ms" id="front-ms">—</div>
     </div>
+
+    <div class="footer">Finance Monitor · Vercel Serverless</div>
   </div>
 
-  <!-- DB + Session -->
-  <div class="pair">
-    <div class="p-card" id="db-card">
-      <div class="p-top">
-        <span class="p-name"><span class="dot d-neu" id="db-dot"></span>Banco</span>
-        <span class="badge b-neu" id="db-badge">—</span>
+  <!-- ════════ TAB 3: HISTÓRICO ════════ -->
+  <div class="tab-content" id="tab-history">
+    <div style="margin-top:8px"></div>
+
+    <!-- Uptime cards -->
+    <div class="uptime-grid" id="uptime-grid">
+      <div class="uptime-card">
+        <div class="uptime-label">1 hora</div>
+        <div class="uptime-val" id="up-1h">–%</div>
+        <div class="uptime-sub" id="up-1h-sub">–</div>
       </div>
-      <div class="p-val" id="db-val">—</div>
-      <div class="p-sub">Neon PostgreSQL</div>
+      <div class="uptime-card">
+        <div class="uptime-label">24 horas</div>
+        <div class="uptime-val" id="up-24h">–%</div>
+        <div class="uptime-sub" id="up-24h-sub">–</div>
+      </div>
     </div>
 
-    <div class="p-card">
-      <div class="p-top">
-        <span class="p-name">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="2.5" stroke-linecap="round">
-            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-          </svg>
-          Sessão
-        </span>
-      </div>
-      <div class="p-val" id="sess-val">0</div>
-      <div class="p-sub">checks OK</div>
+    <!-- Timeline -->
+    <div class="timeline-wrap">
+      <div class="timeline-title">Linha do tempo (últimas 2h)</div>
+      <div class="timeline" id="timeline"></div>
     </div>
+
+    <!-- Full history -->
+    <div class="sec-hdr">
+      <span class="sec-title">Últimos checks</span>
+      <span class="sec-badge" id="hist-count">0</span>
+    </div>
+    <div class="hist-list" id="hist-list">
+      <div class="incident-empty">Sem dados ainda. Aguarde o primeiro check.</div>
+    </div>
+
+    <div class="footer">Histórico salvo localmente neste dispositivo</div>
   </div>
 
-  <!-- History -->
-  <div class="sec-lbl">Histórico</div>
-  <div class="hist" id="hist">
-    <div class="h-row"><span class="h-time" style="color:var(--t3)">Aguardando...</span></div>
-  </div>
+</div><!-- /page -->
 
-  <div class="footer">Auto-refresh <b>30s</b> · Finance Monitor</div>
-</div>
+<!-- ── Bottom Tab Bar ── -->
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('overview',this)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+    </svg>
+    Visão Geral
+  </button>
+  <button class="tab-btn" onclick="switchTab('apps',this)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+    </svg>
+    Aplicações
+  </button>
+  <button class="tab-btn" onclick="switchTab('history',this)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M3 3v18h18"/><polyline points="7 16 11 11 15 14 19 9"/>
+    </svg>
+    Histórico
+  </button>
+</nav>
 
 <script>
-  const REFRESH = 30
-  let timer = REFRESH, hist = [], checks = 0, pings = []
+// ── Storage ──
+const HIST_KEY  = 'fm_history_v2'
+const MAX_HIST  = 1440 // 24h a 1/min
 
-  const lc  = ms => ms < 400 ? 'var(--g)' : ms < 1200 ? 'var(--y)' : 'var(--r)'
-  const lp  = ms => Math.min(100, (ms / 2000) * 100)
-  const fmt = iso => new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})
+function loadHist()  { try { return JSON.parse(localStorage.getItem(HIST_KEY)) || [] } catch { return [] } }
+function saveHist(h) { localStorage.setItem(HIST_KEY, JSON.stringify(h.slice(-MAX_HIST))) }
 
-  function dot(id, s){ document.getElementById(id).className = `dot d-${s}` }
-  function badge(id, cls, txt){ const e=document.getElementById(id); e.className=`badge b-${cls}`; e.textContent=txt }
+let history = loadHist()
+let timer   = 0
+let REFRESH = 30
+let totalChecks = 0
 
-  function setSvc(prefix, ck) {
-    dot(`${prefix}-dot`, ck.ok ? 'ok' : 'err')
-    document.getElementById(`${prefix}-row`).className = `svc-row svc-${ck.ok?'ok':'err'}`
-    document.getElementById(`${prefix}-detail`).textContent = ck.ok
-      ? `HTTP ${ck.status} · ${prefix==='api'?'Cloud Run':'React/Vite'}`
-      : (ck.detail || 'Sem resposta')
-    document.getElementById(`${prefix}-ms`).innerHTML = ck.ok
-      ? `${ck.ms}<small>ms</small>` : '<small style="font-size:18px">—</small>'
-    document.getElementById(`${prefix}-bar`).style.width = `${lp(ck.ms)}%`
-    document.getElementById(`${prefix}-bar`).style.background = lc(ck.ms)
-    // metric row
-    const mv = document.getElementById(`m-${prefix}`)
-    mv.innerHTML = ck.ok ? `${ck.ms}<span class="m-unit">ms</span>` : '—'
-    document.getElementById(`m-${prefix}-sub`).textContent = ck.ok
-      ? (ck.ms < 400 ? 'Rápido' : ck.ms < 1200 ? 'Normal' : 'Lento') : 'Offline'
-  }
+// ── Tab navigation ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'))
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  document.getElementById('tab-' + name).classList.add('active')
+  btn.classList.add('active')
+  if (name === 'history') renderHistory()
+}
 
-  function renderPings() {
-    const container = document.getElementById('h-checks')
-    // show last 20, newest right
-    const recent = pings.slice(-20)
-    container.innerHTML = recent.map(ok =>
-      `<div class="hc ${ok?'hc-ok':'hc-err'}"></div>`
-    ).join('') + Array(Math.max(0,20-recent.length)).fill('<div class="hc"></div>').join('')
-  }
+// ── Helpers ──
+const lc  = ms => ms < 400 ? 'var(--g)' : ms < 1200 ? 'var(--y)' : 'var(--r)'
+const fmtTime = ts => new Date(ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})
+const fmtDate = ts => new Date(ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}) + ' ' + new Date(ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})
 
-  async function check() {
-    timer = REFRESH
-    document.getElementById('cd').textContent = `${REFRESH}s`
+function uptimePct(arr) {
+  if (!arr.length) return null
+  return (arr.filter(h => h.ok).length / arr.length * 100).toFixed(1)
+}
 
-    try {
-      const data  = await fetch('/api/status').then(r=>r.json())
-      const api   = data.checks.find(c=>c.name==='API + DB')
-      const front = data.checks.find(c=>c.name==='Frontend')
-      checks++
-      pings.push(data.ok)
-      if (pings.length > 20) pings.shift()
+function uptimeClass(pct) {
+  if (pct === null) return 'good'
+  const n = parseFloat(pct)
+  if (n === 100)  return 'perfect'
+  if (n >= 99)    return 'good'
+  if (n >= 95)    return 'warn'
+  return 'bad'
+}
 
-      // Hero
-      const hero = document.getElementById('hero')
-      hero.className = `hero hero-${data.ok?'ok':'err'}`
-      dot('h-dot', data.ok?'ok':'err')
-      document.getElementById('h-status').textContent = data.ok ? 'Todos os sistemas operacionais' : 'Degradação detectada'
-      document.getElementById('h-ts').textContent = `Atualizado às ${fmt(data.ts)}`
-      renderPings()
+// ── Bar chart ──
+function barChart(containerId, data, maxMs) {
+  const el  = document.getElementById(containerId)
+  if (!el) return
+  const max = maxMs || Math.max(...data.map(d => d.ms || 0), 300)
+  el.innerHTML = data.map(d => {
+    if (d === null) return `<div class="bar" style="height:20%;background:var(--s2)"></div>`
+    const h   = Math.max(8, Math.round((d.ms / max) * 100))
+    const col = d.ok ? lc(d.ms) : 'var(--r)'
+    return `<div class="bar" style="height:${h}%;background:${col};opacity:.85" title="${d.ms}ms"></div>`
+  }).join('')
+}
 
-      // Services
-      if (api)   setSvc('api',   api)
-      if (front) setSvc('front', front)
+// ── Ping mini-bar (hero) ──
+function renderPings(last20) {
+  const el = document.getElementById('h-pings')
+  el.innerHTML = Array(20).fill(0).map((_, i) => {
+    const item = last20[i]
+    if (!item) return `<div class="hc"></div>`
+    return `<div class="hc ${item.ok ? 'hc-ok' : 'hc-err'}"></div>`
+  }).join('')
+}
 
-      // DB
-      const dbOk  = api?.dbStatus === 'ok'
-      const dbDeg = api?.dbStatus === 'degraded'
-      dot('db-dot', dbOk?'ok':'err')
-      badge('db-badge', dbOk?'ok':'err', dbOk?'Online':dbDeg?'Falha':'Offline')
-      document.getElementById('db-val').textContent = dbOk?'Online':dbDeg?'Falha':'Offline'
-
-      // Session + checks metric
-      document.getElementById('sess-val').textContent = checks
-      document.getElementById('m-checks').textContent = checks
-
-      // History
-      hist.unshift({ts:data.ts, ok:data.ok, ms:api?.ms??0, db:dbOk})
-      if (hist.length > 8) hist.pop()
-      document.getElementById('hist').innerHTML = hist.map(h=>`
-        <div class="h-row">
-          <span class="h-time">${fmt(h.ts)}</span>
-          <span class="h-st ${h.ok?'ok-t':'err-t'}">${h.ok?'✓ OK':'✗ Falha'} · DB ${h.db?'OK':'⚠ Falha'}</span>
-          <span class="h-ms" style="color:${lc(h.ms)}">${h.ms}ms</span>
-        </div>`).join('')
-
-    } catch {
-      document.getElementById('hero').className = 'hero hero-err'
-      document.getElementById('h-status').textContent = 'Monitor sem resposta'
+// ── Incidentes ──
+function getIncidents(hist) {
+  const incidents = []
+  let start = null
+  for (let i = hist.length - 1; i >= 0; i--) {
+    const h = hist[i]
+    if (!h.ok && start === null) start = h.ts
+    if (h.ok && start !== null) {
+      incidents.push({ start, end: hist[i + 1]?.ts ?? start, dur: start - (hist[i + 1]?.ts ?? start) })
+      start = null
     }
   }
+  if (start !== null) incidents.push({ start, end: null, dur: null })
+  return incidents.slice(0, 5)
+}
 
-  // Init ping dots
-  renderPings()
+function renderIncidents(incidents) {
+  const el = document.getElementById('incident-list')
+  document.getElementById('inc-count').textContent = incidents.length === 0 ? 'Nenhum' : `${incidents.length} incidente${incidents.length > 1 ? 's' : ''}`
+  if (!incidents.length) {
+    el.innerHTML = `<div class="incident-empty">✓ Nenhum incidente nas últimas 24h</div>`
+    return
+  }
+  el.innerHTML = incidents.map(inc => {
+    const durMs  = inc.dur ? Math.abs(inc.dur) : null
+    const durStr = durMs === null ? 'em andamento' : durMs < 60000 ? `${Math.round(durMs/1000)}s` : `${Math.round(durMs/60000)} min`
+    return `<div class="incident-row">
+      <div class="incident-dot"></div>
+      <div class="incident-info">
+        <div class="incident-time">${fmtDate(inc.start)}</div>
+        <div class="incident-dur">${durStr}</div>
+      </div>
+    </div>`
+  }).join('')
+}
 
-  setInterval(()=>{
-    timer--
-    if (timer<=0){ check(); return }
-    document.getElementById('cd').textContent = `${timer}s`
-  }, 1000)
+// ── Main render: Visão Geral ──
+function renderOverview(data) {
+  const last20 = history.slice(-20)
+  const last1h = history.filter(h => h.ts > Date.now() - 3600000)
+  const upt    = uptimePct(last1h)
 
-  check()
+  const svr = data.checks.find(c => c.name === 'Servidor')
+  const api = data.checks.find(c => c.name === 'API + DB')
+  const fe  = data.checks.find(c => c.name === 'Frontend')
+
+  // Hero
+  const hero = document.getElementById('hero')
+  hero.className = `hero hero-${data.ok ? 'ok' : 'err'}`
+  document.getElementById('h-dot').className = `dot d-${data.ok ? 'ok' : 'err'}`
+  document.getElementById('h-status').textContent = data.ok ? 'Todos os sistemas operacionais' : 'Degradação detectada'
+  document.getElementById('h-ts').textContent = `Atualizado às ${fmtTime(data.ts)}`
+  document.getElementById('h-uptime').textContent = upt !== null ? `${upt}% 1h` : '–%'
+  renderPings(last20)
+
+  // Service cards
+  function updateCard(id, check, sparkData) {
+    const card = document.getElementById('card-' + id)
+    const msEl = document.getElementById('ms-' + id)
+    const stEl = document.getElementById('st-' + id)
+    if (!check) return
+    card.className = `svc-card ${check.ok ? 'ok' : 'err'}`
+    msEl.innerHTML = check.ok ? `${check.ms}<small>ms</small>` : `<small style="font-size:14px">Offline</small>`
+    stEl.textContent = check.ok ? (check.ms < 400 ? 'Rápido' : check.ms < 1200 ? 'Normal' : 'Lento') : (check.detail || 'Sem resposta')
+    stEl.style.color = check.ok ? lc(check.ms) : 'var(--r)'
+
+    // Sparkline (mini bar chart in card)
+    const spEl = document.getElementById('sp-' + id)
+    const last = sparkData.slice(-8)
+    spEl.innerHTML = `<div style="display:flex;align-items:flex-end;gap:2px;height:18px">${
+      Array(8).fill(0).map((_, i) => {
+        const d = last[i]
+        if (!d) return `<div style="flex:1;height:30%;background:var(--s2);border-radius:2px 2px 0 0"></div>`
+        const h   = Math.max(20, Math.round((d.ms / 2000) * 100))
+        const col = d.ok ? lc(d.ms) : 'var(--r)'
+        return `<div style="flex:1;height:${Math.min(h,100)}%;background:${col};opacity:.7;border-radius:2px 2px 0 0"></div>`
+      }).join('')
+    }</div>`
+  }
+
+  const svrHist = history.map(h => h.servidor).filter(Boolean)
+  const apiHist = history.map(h => h.apidb).filter(Boolean)
+  const feHist  = history.map(h => h.frontend).filter(Boolean)
+
+  updateCard('servidor', svr, svrHist)
+  updateCard('apidb',    api, apiHist)
+  updateCard('frontend', fe,  feHist)
+
+  renderIncidents(getIncidents(history))
+}
+
+// ── Render: Aplicações ──
+function renderApps(data) {
+  const svr = data?.checks?.find(c => c.name === 'Servidor')
+  const api = data?.checks?.find(c => c.name === 'API + DB')
+  const fe  = data?.checks?.find(c => c.name === 'Frontend')
+
+  const last24h = history.filter(h => h.ts > Date.now() - 86400000)
+  const svrUp = uptimePct(last24h.map(h => ({ ok: h.servidor?.ok ?? false })))
+  const apiUp = uptimePct(last24h.map(h => ({ ok: h.apidb?.ok    ?? false })))
+  const feUp  = uptimePct(last24h.map(h => ({ ok: h.frontend?.ok ?? false })))
+
+  const svrHist20 = history.slice(-20).map(h => h.servidor).filter(Boolean)
+  const apiHist20 = history.slice(-20).map(h => h.apidb).filter(Boolean)
+  const feHist20  = history.slice(-20).map(h => h.frontend).filter(Boolean)
+
+  function setBadge(id, ok) {
+    const el = document.getElementById(id)
+    el.className = `badge ${ok ? 'b-ok' : 'b-err'}`
+    el.textContent = ok ? 'Online' : 'Offline'
+  }
+  function setMetric(id, val, cls) {
+    const el = document.getElementById(id)
+    el.textContent = val
+    el.className = `app-metric-val ${cls || ''}`
+  }
+
+  if (svr) {
+    setBadge('cr-badge', svr.ok)
+    setMetric('cr-ms', svr.ok ? `${svr.ms}ms` : '–', svr.ok ? (svr.ms < 400 ? 'ok' : svr.ms < 1200 ? 'warn' : 'err') : 'err')
+    setMetric('cr-uptime', svrUp !== null ? `${svrUp}%` : '–', uptimeClass(svrUp))
+    barChart('bc-servidor', svrHist20)
+  }
+  if (api) {
+    setBadge('api-badge', api.ok)
+    setMetric('api-ms', api.ok ? `${api.ms}ms` : '–', api.ok ? (api.ms < 400 ? 'ok' : api.ms < 1200 ? 'warn' : 'err') : 'err')
+    const dbOk = api.dbStatus === 'ok'
+    setMetric('api-db', dbOk ? 'Conectado' : api.dbStatus === 'degraded' ? 'Degradado' : '–', dbOk ? 'ok' : 'err')
+    setMetric('api-uptime', apiUp !== null ? `${apiUp}%` : '–', uptimeClass(apiUp))
+    barChart('bc-apidb', apiHist20)
+  }
+  if (fe) {
+    setBadge('fe-badge', fe.ok)
+    setMetric('fe-ms', fe.ok ? `${fe.ms}ms` : '–', fe.ok ? (fe.ms < 800 ? 'ok' : 'warn') : 'err')
+    setMetric('fe-http', fe.ok ? `HTTP ${fe.status}` : '–', fe.ok ? 'ok' : 'err')
+    setMetric('fe-uptime', feUp !== null ? `${feUp}%` : '–', uptimeClass(feUp))
+    barChart('bc-frontend', feHist20)
+  }
+}
+
+// ── Render: Histórico ──
+function renderHistory() {
+  const now   = Date.now()
+  const last1h  = history.filter(h => h.ts > now - 3600000)
+  const last24h = history.filter(h => h.ts > now - 86400000)
+
+  function setUptime(id, subId, arr, label) {
+    const pct = uptimePct(arr)
+    const el  = document.getElementById(id)
+    el.textContent = pct !== null ? `${pct}%` : '–%'
+    el.className   = `uptime-val ${uptimeClass(pct)}`
+    const ok = arr.filter(h => h.ok).length
+    document.getElementById(subId).textContent = pct !== null ? `${ok}/${arr.length} checks OK` : 'Sem dados'
+  }
+
+  setUptime('up-1h',  'up-1h-sub',  last1h,  '1h')
+  setUptime('up-24h', 'up-24h-sub', last24h, '24h')
+
+  // Timeline (últimas 2h, 60 barras)
+  const last2h   = history.filter(h => h.ts > now - 7200000)
+  const tlEl     = document.getElementById('timeline')
+  const slots    = 60
+  const interval = 7200000 / slots
+  const bars     = Array(slots).fill(null).map((_, i) => {
+    const tStart = now - 7200000 + i * interval
+    const tEnd   = tStart + interval
+    const chunk  = last2h.filter(h => h.ts >= tStart && h.ts < tEnd)
+    if (!chunk.length) return null
+    const allOk  = chunk.every(h => h.ok)
+    return { ok: allOk, ms: Math.round(chunk.reduce((s, h) => s + (h.apidb?.ms || 0), 0) / chunk.length) }
+  })
+
+  tlEl.innerHTML = bars.map(b => {
+    if (!b) return `<div class="tl-bar" style="height:20%;background:var(--s2)"></div>`
+    const h   = Math.max(15, Math.min(100, (b.ms / 2000) * 100))
+    const col = b.ok ? lc(b.ms) : 'var(--r)'
+    return `<div class="tl-bar" style="height:${h}%;background:${col};opacity:.8" title="${b.ms}ms"></div>`
+  }).join('')
+
+  // History list (últimos 30)
+  const recent  = [...history].reverse().slice(0, 30)
+  document.getElementById('hist-count').textContent = history.length
+  if (!recent.length) {
+    document.getElementById('hist-list').innerHTML = `<div class="incident-empty">Sem dados ainda.</div>`
+    return
+  }
+  document.getElementById('hist-list').innerHTML = recent.map(h => {
+    const apiMs = h.apidb?.ms ?? h.ms ?? 0
+    return `<div class="hist-row">
+      <span class="hist-time">${fmtTime(h.ts)}</span>
+      <span class="hist-status ${h.ok ? 'ok' : 'err'}">${h.ok ? '✓ OK' : '✗ Falha'}</span>
+      <span class="hist-ms" style="color:${lc(apiMs)}">${apiMs}ms</span>
+    </div>`
+  }).join('')
+}
+
+// ── Main check ──
+async function doCheck() {
+  try {
+    const data = await fetch('/api/status').then(r => r.json())
+    totalChecks++
+
+    const svr = data.checks.find(c => c.name === 'Servidor')
+    const api = data.checks.find(c => c.name === 'API + DB')
+    const fe  = data.checks.find(c => c.name === 'Frontend')
+
+    // Save to history
+    history.push({
+      ts:       Date.now(),
+      ok:       data.ok,
+      servidor: svr ? { ok: svr.ok, ms: svr.ms } : null,
+      apidb:    api ? { ok: api.ok, ms: api.ms, dbStatus: api.dbStatus } : null,
+      frontend: fe  ? { ok: fe.ok,  ms: fe.ms,  status: fe.status }     : null,
+    })
+    saveHist(history)
+
+    renderOverview(data)
+    renderApps(data)
+
+    // Update history tab if active
+    if (document.getElementById('tab-history').classList.contains('active')) {
+      renderHistory()
+    }
+  } catch {
+    const hero = document.getElementById('hero')
+    hero.className = 'hero hero-err'
+    document.getElementById('h-status').textContent = 'Monitor sem resposta'
+  }
+}
+
+function forceCheck() {
+  timer = 0
+  document.getElementById('cd').textContent = '…'
+}
+
+// ── Countdown ──
+setInterval(() => {
+  if (timer <= 0) {
+    doCheck()
+    timer = REFRESH
+    return
+  }
+  timer--
+  document.getElementById('cd').textContent = `${timer}s`
+}, 1000)
+
+// ── Init ──
+renderHistory()
+doCheck()
 </script>
 </body>
 </html>
