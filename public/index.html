@@ -264,6 +264,15 @@
     .hist-status.err{color:var(--r)}
     .hist-ms{font-size:11px;font-variant-numeric:tabular-nums;flex-shrink:0;color:var(--t2)}
 
+    /* ── Last check detail card ── */
+    .last-check-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:12px}
+    .lck-row{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--bd)}
+    .lck-row:last-child{border-bottom:none}
+    .lck-name{font-size:12px;color:var(--t2);display:flex;align-items:center;gap:7px}
+    .lck-right{display:flex;align-items:center;gap:8px}
+    .lck-ms{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+    .lck-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px}
+
     /* ── Footer ── */
     .footer{text-align:center;font-size:11px;color:var(--t3);padding:12px 0 4px}
 
@@ -377,6 +386,13 @@
               Latência (ping)
             </span>
             <span class="app-metric-val" id="cr-ms">–</span>
+          </div>
+          <div class="app-metric-row">
+            <span class="app-metric-label">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
+              HTTP Status
+            </span>
+            <span class="app-metric-val" id="cr-http">–</span>
           </div>
           <div class="app-metric-row">
             <span class="app-metric-label">
@@ -520,11 +536,11 @@
 
     <!-- Full history -->
     <div class="sec-hdr">
-      <span class="sec-title">Últimos checks</span>
-      <span class="sec-badge" id="hist-count">0</span>
+      <span class="sec-title">Último check</span>
+      <span class="sec-badge" id="hist-count">–</span>
     </div>
-    <div class="hist-list" id="hist-list">
-      <div class="incident-empty">Sem dados ainda. Aguarde o primeiro check.</div>
+    <div id="last-check-wrap">
+      <div class="incident-empty">Aguardando primeiro check…</div>
     </div>
 
     <div class="footer">Histórico salvo localmente neste dispositivo</div>
@@ -669,7 +685,10 @@ function renderOverview(data) {
   const hero = document.getElementById('hero')
   hero.className = `hero hero-${data.ok ? 'ok' : 'err'}`
   document.getElementById('h-dot').className = `dot d-${data.ok ? 'ok' : 'err'}`
-  document.getElementById('h-status').textContent = data.ok ? 'Todos os sistemas operacionais' : 'Degradação detectada'
+  const failedSvcs = data.checks.filter(c => !c.ok).map(c => c.name)
+  document.getElementById('h-status').textContent = data.ok
+    ? 'Todos os sistemas operacionais'
+    : failedSvcs.length ? `Falha: ${failedSvcs.join(', ')}` : 'Degradação detectada'
   document.getElementById('h-ts').textContent = `Atualizado às ${fmtTime(data.ts)}`
   document.getElementById('h-uptime').textContent = upt !== null ? `${upt}% 1h` : '–%'
   renderPings(last20)
@@ -739,6 +758,7 @@ function renderApps(data) {
   if (svr) {
     setBadge('cr-badge', svr.ok)
     setMetric('cr-ms', svr.ok ? `${svr.ms}ms` : '–', svr.ok ? (svr.ms < 400 ? 'ok' : svr.ms < 1200 ? 'warn' : 'err') : 'err')
+    setMetric('cr-http', svr.ok ? `HTTP ${svr.status || 200}` : svr.status ? `HTTP ${svr.status}` : '–', svr.ok ? 'ok' : 'err')
     setMetric('cr-uptime', svrUp !== null ? `${svrUp}%` : '–', uptimeClass(svrUp))
     barChart('bc-servidor', svrHist20)
   }
@@ -798,21 +818,34 @@ function renderHistory() {
     return `<div class="tl-bar" style="height:${h}%;background:${col};opacity:.8" title="${b.ms}ms"></div>`
   }).join('')
 
-  // History list (últimos 30)
-  const recent  = [...history].reverse().slice(0, 30)
-  document.getElementById('hist-count').textContent = history.length
-  if (!recent.length) {
-    document.getElementById('hist-list').innerHTML = `<div class="incident-empty">Sem dados ainda.</div>`
+  // Last check card (single entry, updates in place)
+  const last   = history[history.length - 1]
+  const wrapEl = document.getElementById('last-check-wrap')
+  document.getElementById('hist-count').textContent = last ? fmtTime(last.ts) : '–'
+  if (!last) {
+    wrapEl.innerHTML = `<div class="incident-empty">Aguardando primeiro check…</div>`
     return
   }
-  document.getElementById('hist-list').innerHTML = recent.map(h => {
-    const apiMs = h.apidb?.ms ?? h.ms ?? 0
-    return `<div class="hist-row">
-      <span class="hist-time">${fmtTime(h.ts)}</span>
-      <span class="hist-status ${h.ok ? 'ok' : 'err'}">${h.ok ? '✓ OK' : '✗ Falha'}</span>
-      <span class="hist-ms" style="color:${lc(apiMs)}">${apiMs}ms</span>
-    </div>`
-  }).join('')
+  const svcRows = [
+    { label: 'Servidor', d: last.servidor, extra: last.servidor?.status ? `HTTP ${last.servidor.status}` : null },
+    { label: 'API + DB', d: last.apidb,    extra: last.apidb?.dbStatus === 'ok' ? 'DB online' : last.apidb?.dbStatus === 'degraded' ? 'DB degradado' : null },
+    { label: 'Frontend', d: last.frontend, extra: last.frontend?.status  ? `HTTP ${last.frontend.status}`  : null },
+  ]
+  wrapEl.innerHTML = `<div class="last-check-card">${
+    svcRows.filter(r => r.d).map(({ label, d, extra }) => {
+      const msColor = d.ok ? lc(d.ms) : 'var(--r)'
+      return `<div class="lck-row">
+        <span class="lck-name">
+          <span class="dot ${d.ok ? 'd-ok' : 'd-err'}" style="width:6px;height:6px"></span>
+          ${label}
+        </span>
+        <div class="lck-right">
+          ${extra ? `<span class="lck-tag" style="background:rgba(255,255,255,.05);color:var(--t3)">${extra}</span>` : ''}
+          <span class="lck-ms" style="color:${msColor}">${d.ok ? d.ms + 'ms' : 'offline'}</span>
+        </div>
+      </div>`
+    }).join('')
+  }</div>`
 }
 
 // ── Main check ──
@@ -829,7 +862,7 @@ async function doCheck() {
     history.push({
       ts:       Date.now(),
       ok:       data.ok,
-      servidor: svr ? { ok: svr.ok, ms: svr.ms } : null,
+      servidor: svr ? { ok: svr.ok, ms: svr.ms, status: svr.status } : null,
       apidb:    api ? { ok: api.ok, ms: api.ms, dbStatus: api.dbStatus } : null,
       frontend: fe  ? { ok: fe.ok,  ms: fe.ms,  status: fe.status }     : null,
     })
