@@ -283,6 +283,57 @@
       .tab-bar{justify-content:center;gap:0}
       .tab-btn{max-width:120px}
     }
+
+    /* ════════════════════════════════════
+       TAB 4 — SEGURANÇA
+    ════════════════════════════════════ */
+    .sec-top{display:flex;align-items:center;justify-content:space-between;margin:8px 0 12px}
+    .sec-top-info{display:flex;flex-direction:column;gap:2px}
+    .sec-top-title{font-size:13px;font-weight:700;color:var(--t1)}
+    .sec-top-sub{font-size:10px;color:var(--t3)}
+    .sec-run-btn{
+      display:flex;align-items:center;gap:5px;
+      background:var(--s1);border:1px solid rgba(74,196,110,.3);
+      color:var(--g);border-radius:20px;padding:6px 13px;
+      font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s;
+    }
+    .sec-run-btn:active{opacity:.55}
+    .sec-run-btn:disabled{opacity:.35;cursor:not-allowed}
+
+    .sec-tool-card{
+      background:var(--s1);border:1px solid var(--bd);
+      border-radius:18px;overflow:hidden;margin-bottom:10px;
+    }
+    .sec-tool-head{
+      padding:14px 16px;display:flex;align-items:center;gap:12px;
+      border-bottom:1px solid var(--bd);
+    }
+    .sec-tool-icon{
+      width:38px;height:38px;border-radius:12px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .sec-tool-info{flex:1;min-width:0}
+    .sec-tool-name{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:2px}
+    .sec-tool-desc{font-size:11px;color:var(--t3)}
+    .sec-tool-body{padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+    .sec-metric-row{display:flex;align-items:center;justify-content:space-between}
+    .sec-metric-label{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px}
+    .sec-metric-val{font-size:13px;font-weight:700;color:var(--t1);font-variant-numeric:tabular-nums}
+    .sec-metric-val.ok  {color:var(--g)}
+    .sec-metric-val.err {color:var(--r)}
+    .sec-metric-val.warn{color:var(--y)}
+    .sec-vulns{display:flex;flex-wrap:wrap;gap:5px;padding:4px 0}
+    .sec-chip{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+    .sec-chip-ok  {background:rgba(74,196,110,.12); color:var(--g)}
+    .sec-chip-crit{background:rgba(224,92,92,.15);  color:var(--r)}
+    .sec-chip-high{background:rgba(224,92,92,.1);   color:var(--r)}
+    .sec-chip-mod {background:rgba(212,168,67,.12); color:var(--y)}
+    .sec-chip-low {background:rgba(255,255,255,.06);color:var(--t3)}
+    .sec-next{
+      font-size:10px;color:var(--t3);text-align:center;
+      padding:8px 0 4px;font-variant-numeric:tabular-nums;
+    }
   </style>
 </head>
 <body>
@@ -295,7 +346,7 @@
       <div class="hdr-logo"><img src="/logo.png" alt="Monitor"/></div>
       <div>
         <div class="hdr-name">Finance Monitor</div>
-        <div class="hdr-sub">Cloud Run · Neon · Vercel</div>
+        <div class="hdr-sub">Cloud Run · Supabase · Vercel</div>
       </div>
     </div>
     <button class="hdr-btn" onclick="forceCheck()">
@@ -507,7 +558,7 @@
       </div>
     </div>
 
-    <div class="footer">Finance Monitor · Vercel Serverless</div>
+    <div class="footer">Finance Monitor · Vercel Edge</div>
   </div>
 
   <!-- ════════ TAB 3: HISTÓRICO ════════ -->
@@ -546,6 +597,99 @@
     <div class="footer">Histórico salvo localmente neste dispositivo</div>
   </div>
 
+  <!-- ════════ TAB 4: SEGURANÇA ════════ -->
+  <div class="tab-content" id="tab-security">
+    <div style="margin-top:8px">
+
+      <div class="sec-top">
+        <div class="sec-tool-icon" style="background:rgba(74,196,110,.1)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="2" stroke-linecap="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="sec-top-info" style="flex:1;margin-left:10px">
+          <div class="sec-top-title">Monitoramento de Segurança</div>
+          <div class="sec-top-sub">Scans automáticos a cada 1h</div>
+        </div>
+        <button class="sec-run-btn" id="sec-run-btn" onclick="runScan()">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.1"/>
+          </svg>
+          Executar agora
+        </button>
+      </div>
+
+      <!-- npm audit -->
+      <div class="sec-tool-card">
+        <div class="sec-tool-head">
+          <div class="sec-tool-icon" style="background:rgba(74,196,110,.1)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.8" stroke-linecap="round">
+              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+            </svg>
+          </div>
+          <div class="sec-tool-info">
+            <div class="sec-tool-name">npm audit</div>
+            <div class="sec-tool-desc">Dependências Node.js — CVEs conhecidos</div>
+          </div>
+          <span class="badge b-neu" id="npm-badge">–</span>
+        </div>
+        <div class="sec-tool-body">
+          <div class="sec-metric-row">
+            <span class="sec-metric-label">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Último scan
+            </span>
+            <span class="sec-metric-val" id="npm-time">–</span>
+          </div>
+          <div class="sec-metric-row">
+            <span class="sec-metric-label">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Vulnerabilidades
+            </span>
+            <span class="sec-metric-val" id="npm-total">–</span>
+          </div>
+          <div class="sec-vulns" id="npm-vulns"></div>
+        </div>
+      </div>
+
+      <!-- trivy -->
+      <div class="sec-tool-card">
+        <div class="sec-tool-head">
+          <div class="sec-tool-icon" style="background:rgba(79,142,247,.1)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f8ef7" stroke-width="1.8" stroke-linecap="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <div class="sec-tool-info">
+            <div class="sec-tool-name">Trivy</div>
+            <div class="sec-tool-desc">Container + Sistema operacional — HIGH/CRITICAL</div>
+          </div>
+          <span class="badge b-neu" id="trivy-badge">–</span>
+        </div>
+        <div class="sec-tool-body">
+          <div class="sec-metric-row">
+            <span class="sec-metric-label">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Último scan
+            </span>
+            <span class="sec-metric-val" id="trivy-time">–</span>
+          </div>
+          <div class="sec-metric-row">
+            <span class="sec-metric-label">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Vulnerabilidades
+            </span>
+            <span class="sec-metric-val" id="trivy-total">–</span>
+          </div>
+          <div class="sec-vulns" id="trivy-vulns"></div>
+        </div>
+      </div>
+
+      <div class="sec-next" id="sec-next"></div>
+      <div class="footer">Scans executados pelo Finance App · Cloud Run</div>
+    </div>
+  </div>
+
 </div><!-- /page -->
 
 <!-- ── Bottom Tab Bar ── -->
@@ -569,6 +713,12 @@
     </svg>
     Histórico
   </button>
+  <button class="tab-btn" onclick="switchTab('security',this)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Segurança
+  </button>
 </nav>
 
 <script>
@@ -590,7 +740,8 @@ function switchTab(name, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
   document.getElementById('tab-' + name).classList.add('active')
   btn.classList.add('active')
-  if (name === 'history') renderHistory()
+  if (name === 'history')  renderHistory()
+  if (name === 'security') fetchSecurity()
 }
 
 // ── Helpers ──
@@ -879,6 +1030,20 @@ async function doCheck() {
     const hero = document.getElementById('hero')
     hero.className = 'hero hero-err'
     document.getElementById('h-status').textContent = 'Monitor sem resposta'
+    // Reset overview cards so they don't stay frozen in old state
+    ;['servidor','apidb','frontend'].forEach(id => {
+      const card = document.getElementById('card-' + id)
+      const msEl = document.getElementById('ms-' + id)
+      const stEl = document.getElementById('st-' + id)
+      if (card) card.className = 'svc-card err'
+      if (msEl) msEl.innerHTML = '<small style="font-size:14px">–</small>'
+      if (stEl) { stEl.textContent = 'Sem dados'; stEl.style.color = 'var(--r)' }
+    })
+    // Reset apps tab badges
+    ;['cr-badge','api-badge','fe-badge'].forEach(id => {
+      const el = document.getElementById(id)
+      if (el) { el.className = 'badge b-err'; el.textContent = 'Offline' }
+    })
   }
 }
 
@@ -891,6 +1056,10 @@ function forceCheck() {
 setInterval(() => {
   if (timer <= 0) {
     doCheck()
+    // Atualiza segurança em segundo plano se estiver na aba ou a cada 5min
+    if (document.getElementById('tab-security').classList.contains('active')) {
+      fetchSecurity()
+    }
     timer = REFRESH
     return
   }
@@ -898,9 +1067,112 @@ setInterval(() => {
   document.getElementById('cd').textContent = `${timer}s`
 }, 1000)
 
+// Polling de segurança independente a cada 5 min (scans rodam a cada 1h)
+setInterval(() => {
+  fetchSecurity()
+}, 5 * 60 * 1000)
+
+// ── Segurança ──
+let secData = null
+
+function fmtRelTime(isoStr) {
+  if (!isoStr) return '–'
+  const diff = Date.now() - new Date(isoStr).getTime()
+  const min  = Math.floor(diff / 60000)
+  if (min < 1)  return 'agora mesmo'
+  if (min < 60) return `há ${min} min`
+  const h = Math.floor(min / 60)
+  return `há ${h}h${min % 60 > 0 ? ` ${min % 60}min` : ''}`
+}
+
+function nextScanIn(isoStr) {
+  if (!isoStr) return ''
+  const diffMs  = Date.now() - new Date(isoStr).getTime()
+  const nextMs  = 3600000 - diffMs
+  if (nextMs <= 0) return 'Próximo scan: em breve'
+  const min = Math.floor(nextMs / 60000)
+  return `Próximo scan automático: em ${min} min`
+}
+
+function renderSecurity(data) {
+  if (!data) return
+  secData = data
+
+  function renderTool(tool, badgeId, timeId, totalId, vulnsId) {
+    const scan   = data[tool]
+    const badge  = document.getElementById(badgeId)
+    const timeEl = document.getElementById(timeId)
+    const totEl  = document.getElementById(totalId)
+    const vulnEl = document.getElementById(vulnsId)
+    if (!scan) {
+      badge.className = 'badge b-neu'; badge.textContent = 'Aguardando'
+      timeEl.textContent = '–'; totEl.textContent = '–'
+      vulnEl.innerHTML = ''
+      return
+    }
+    const isClean  = scan.status === 'clean'
+    const isError  = scan.status === 'error' || scan.status === 'unavailable'
+    badge.className = `badge ${isClean ? 'b-ok' : isError ? 'b-warn' : 'b-err'}`
+    badge.textContent = isClean ? 'Limpo' : isError ? 'Erro' : `${scan.vulnCount} vuln.`
+    timeEl.textContent = fmtRelTime(scan.runAt)
+    timeEl.className = 'sec-metric-val'
+
+    if (isClean) {
+      totEl.textContent = '0'
+      totEl.className = 'sec-metric-val ok'
+      vulnEl.innerHTML = `<span class="sec-chip sec-chip-ok">✓ Nenhuma vulnerabilidade</span>`
+    } else if (isError) {
+      totEl.textContent = '–'
+      totEl.className = 'sec-metric-val warn'
+      vulnEl.innerHTML = `<span class="sec-chip sec-chip-mod">${scan.details?.error || 'Erro ao executar scan'}</span>`
+    } else {
+      const d = scan.details || {}
+      totEl.textContent = scan.vulnCount
+      totEl.className = 'sec-metric-val err'
+      const chips = []
+      if (d.critical > 0) chips.push(`<span class="sec-chip sec-chip-crit">Críticas: ${d.critical}</span>`)
+      if (d.high     > 0) chips.push(`<span class="sec-chip sec-chip-high">Altas: ${d.high}</span>`)
+      if (d.moderate > 0) chips.push(`<span class="sec-chip sec-chip-mod">Moderadas: ${d.moderate}</span>`)
+      if (d.low      > 0) chips.push(`<span class="sec-chip sec-chip-low">Baixas: ${d.low}</span>`)
+      vulnEl.innerHTML = chips.join('')
+    }
+  }
+
+  renderTool('npm_audit', 'npm-badge',   'npm-time',   'npm-total',   'npm-vulns')
+  renderTool('trivy',     'trivy-badge', 'trivy-time', 'trivy-total', 'trivy-vulns')
+
+  const latest = [data.npm_audit?.runAt, data.trivy?.runAt].filter(Boolean).sort().pop()
+  document.getElementById('sec-next').textContent = nextScanIn(latest)
+}
+
+async function fetchSecurity() {
+  try {
+    const data = await fetch('/api/security').then(r => r.json())
+    renderSecurity(data)
+  } catch {}
+}
+
+async function runScan() {
+  const btn = document.getElementById('sec-run-btn')
+  btn.disabled = true
+  btn.innerHTML = `<span class="spin"></span> Executando…`
+  try {
+    await fetch('/api/security', { method: 'POST' })
+    setTimeout(async () => {
+      await fetchSecurity()
+      btn.disabled = false
+      btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.1"/></svg> Executar agora`
+    }, 10000)
+  } catch {
+    btn.disabled = false
+    btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.1"/></svg> Executar agora`
+  }
+}
+
 // ── Init ──
 renderHistory()
 doCheck()
+fetchSecurity()
 </script>
 </body>
 </html>

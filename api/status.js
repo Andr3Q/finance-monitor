@@ -1,34 +1,39 @@
-// Vercel serverless function — checa o Finance app do lado do servidor
+// Vercel Edge Function — checa o Finance app do lado do servidor
+// Edge Runtime: zero cold start, overhead < 1ms
 // Evita CORS e esconde a URL interna do cliente
+
+export const config = { runtime: 'edge' }
 
 const TARGET = process.env.TARGET_URL || 'https://finance-app-1042158013294.southamerica-east1.run.app'
 
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  // Edge cache: 30s fresco, até 60s stale enquanto revalida.
-  // Evita recheck a cada clique sem atrasar muito a detecção de falhas.
-  res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60')
-
+export default async function handler(req) {
   const checks = await Promise.all([
-    ping(`${TARGET}/ping`,    'Servidor'),
-    ping(`${TARGET}/health`,  'API + DB'),
-    ping(`${TARGET}/`,        'Frontend'),
+    ping(`${TARGET}/ping`,   'Servidor'),
+    ping(`${TARGET}/health`, 'API + DB'),
+    ping(`${TARGET}/`,       'Frontend'),
   ])
 
   const allOk = checks.every(c => c.ok)
 
-  res.status(200).json({
-    ok:        allOk,
-    ts:        new Date().toISOString(),
+  return new Response(JSON.stringify({
+    ok:     allOk,
+    ts:     new Date().toISOString(),
     checks,
+  }), {
+    status: 200,
+    headers: {
+      'Content-Type':                'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Cache-Control':               'no-store',
+    },
   })
 }
 
 async function ping(url, name) {
   const t0 = Date.now()
   try {
-    const r   = await fetch(url, { signal: AbortSignal.timeout(8000) })
-    const ms  = Date.now() - t0
+    const r    = await fetch(url, { signal: AbortSignal.timeout(8000) })
+    const ms   = Date.now() - t0
     const body = r.headers.get('content-type')?.includes('json') ? await r.json() : null
     return {
       name,
