@@ -6,7 +6,7 @@
   <title>Finance Monitor</title>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="theme-color" content="#060b07"/>
+  <meta name="theme-color" content="#111111"/>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="icon" href="/icon-192.png"/>
   <link rel="apple-touch-icon" href="/icon-192.png"/>
@@ -14,18 +14,18 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
     :root{
-      --bg:  #060b07;
-      --s1:  #0c1410;
-      --s2:  #111a12;
-      --s3:  #0f1810;
-      --bd:  rgba(255,255,255,.06);
-      --bd2: rgba(255,255,255,.11);
-      --t1:  #e8ede8;
-      --t2:  #6b8870;
-      --t3:  #334437;
+      --bg:  #111111;
+      --s1:  #1a1a1a;
+      --s2:  rgba(255,255,255,.04);
+      --s3:  #1a1a1a;
+      --bd:  rgba(255,255,255,.10);
+      --bd2: rgba(255,255,255,.18);
+      --t1:  #ffffff;
+      --t2:  rgba(255,255,255,.45);
+      --t3:  rgba(255,255,255,.25);
       --g:   #4ac46e;
-      --r:   #e05c5c;
-      --y:   #d4a843;
+      --r:   #ff4757;
+      --y:   #ffc107;
     }
 
     html,body{height:100%}
@@ -351,6 +351,74 @@
       font-size:10px;color:var(--t3);text-align:center;
       padding:8px 0 4px;font-variant-numeric:tabular-nums;
     }
+
+    /* ════════════════════════════════════
+       TAB 5 — TESTES
+    ════════════════════════════════════ */
+    .test-header{display:flex;align-items:center;justify-content:space-between;margin:8px 0 14px}
+    .test-header-info{display:flex;flex-direction:column;gap:2px}
+    .test-header-title{font-size:13px;font-weight:700;color:var(--t1)}
+    .test-header-sub{font-size:10px;color:var(--t3)}
+
+    .test-run-all-btn{
+      display:flex;align-items:center;gap:6px;
+      background:var(--g);color:#000;
+      border:none;border-radius:20px;padding:7px 14px;
+      font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s;
+    }
+    .test-run-all-btn:active{opacity:.7}
+    .test-run-all-btn:disabled{opacity:.4;cursor:not-allowed}
+
+    /* Barra de progresso */
+    .test-progress{
+      background:var(--s1);border:1px solid var(--bd);border-radius:12px;
+      padding:10px 14px;margin-bottom:12px;display:none;
+    }
+    .test-progress.visible{display:block}
+    .test-progress-label{font-size:11px;color:var(--t2);margin-bottom:6px;display:flex;justify-content:space-between}
+    .test-progress-bar{height:4px;background:var(--bd);border-radius:2px;overflow:hidden}
+    .test-progress-fill{height:100%;background:var(--g);border-radius:2px;transition:width .3s ease}
+
+    /* Grid de cards de teste */
+    .test-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+
+    .tc{
+      background:var(--s1);border:2px solid var(--bd);
+      border-radius:16px;padding:12px 10px;
+      display:flex;flex-direction:column;gap:5px;
+      position:relative;overflow:hidden;transition:border-color .3s;
+    }
+    .tc.testing {border-color:var(--y);animation:tc-pulse .9s ease infinite}
+    .tc.ok      {border-color:var(--g)}
+    .tc.fail    {border-color:var(--r)}
+    @keyframes tc-pulse{0%,100%{border-color:rgba(255,193,7,.3)}50%{border-color:var(--y)}}
+
+    .tc-top{display:flex;align-items:center;justify-content:space-between}
+    .tc-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3)}
+    .tc-icon{width:16px;height:16px;flex-shrink:0}
+
+    .tc-result{display:flex;align-items:center;gap:5px;min-height:20px}
+    .tc-status{font-size:13px;font-weight:800;letter-spacing:-.3px;line-height:1}
+    .tc.ok   .tc-status{color:var(--g)}
+    .tc.fail .tc-status{color:var(--r)}
+    .tc-ms{font-size:10px;font-weight:600;color:var(--t3);font-variant-numeric:tabular-nums}
+
+    .tc-detail{font-size:10px;color:var(--t2);line-height:1.3;min-height:13px}
+    .tc-ts{font-size:9px;color:var(--t3);font-variant-numeric:tabular-nums;margin-top:2px}
+
+    .tc-btn{
+      display:flex;align-items:center;justify-content:center;gap:4px;
+      background:var(--s2);border:1px solid var(--bd);
+      color:var(--t2);border-radius:8px;padding:4px 0;width:100%;
+      font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s;margin-top:2px;
+    }
+    .tc-btn:active{opacity:.55}
+    .tc-btn:disabled{opacity:.3;cursor:not-allowed}
+
+    @media(min-width:600px){.test-grid{grid-template-columns:1fr 1fr 1fr}}
+    @media(max-width:374px){.test-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -732,34 +800,260 @@
     </div>
   </div>
 
+  <!-- ════════ TAB 5: TESTES ════════ -->
+  <div class="tab-content" id="tab-tests">
+    <div style="margin-top:8px">
+
+      <div class="test-header">
+        <div class="test-header-info">
+          <div class="test-header-title">Testes de Infraestrutura</div>
+          <div class="test-header-sub">13 componentes · resultados em tempo real</div>
+        </div>
+        <button class="test-run-all-btn" id="run-all-btn" onclick="runAllTests()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Executar todos
+        </button>
+      </div>
+
+      <!-- Barra de progresso -->
+      <div class="test-progress" id="test-progress">
+        <div class="test-progress-label">
+          <span id="progress-label">Iniciando testes…</span>
+          <span id="progress-count">0/13</span>
+        </div>
+        <div class="test-progress-bar">
+          <div class="test-progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Grid de 13 cards -->
+      <div class="test-grid" id="test-grid">
+
+        <!-- Infraestrutura -->
+        <div class="tc" id="tc-servidor">
+          <div class="tc-top">
+            <span class="tc-name">Servidor</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-servidor">–</span><span class="tc-ms" id="tcm-servidor"></span></div>
+          <div class="tc-detail" id="tcd-servidor">Cloud Run · GET /ping</div>
+          <div class="tc-ts" id="tct-servidor"></div>
+          <button class="tc-btn" onclick="runTest('servidor')" id="tcb-servidor">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-db">
+          <div class="tc-top">
+            <span class="tc-name">Banco de Dados</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M4 6c0 1.7 3.6 3 8 3s8-1.3 8-3-3.6-3-8-3-8 1.3-8 3z"/><path d="M4 6v4c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 10v4c0 1.7 3.6 3 8 3s8-1.3 8-3v-4"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-db">–</span><span class="tc-ms" id="tcm-db"></span></div>
+          <div class="tc-detail" id="tcd-db">Supabase · GET /health</div>
+          <div class="tc-ts" id="tct-db"></div>
+          <button class="tc-btn" onclick="runTest('db')" id="tcb-db">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-frontend">
+          <div class="tc-top">
+            <span class="tc-name">Frontend</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-frontend">–</span><span class="tc-ms" id="tcm-frontend"></span></div>
+          <div class="tc-detail" id="tcd-frontend">React PWA · GET /</div>
+          <div class="tc-ts" id="tct-frontend"></div>
+          <button class="tc-btn" onclick="runTest('frontend')" id="tcb-frontend">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <!-- API Routes -->
+        <div class="tc" id="tc-auth">
+          <div class="tc-top">
+            <span class="tc-name">Auth API</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-auth">–</span><span class="tc-ms" id="tcm-auth"></span></div>
+          <div class="tc-detail" id="tcd-auth">GET /api/auth/me</div>
+          <div class="tc-ts" id="tct-auth"></div>
+          <button class="tc-btn" onclick="runTest('auth')" id="tcb-auth">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-goals">
+          <div class="tc-top">
+            <span class="tc-name">Metas</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-goals">–</span><span class="tc-ms" id="tcm-goals"></span></div>
+          <div class="tc-detail" id="tcd-goals">GET /api/goals</div>
+          <div class="tc-ts" id="tct-goals"></div>
+          <button class="tc-btn" onclick="runTest('goals')" id="tcb-goals">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-installments">
+          <div class="tc-top">
+            <span class="tc-name">Parcelas</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-installments">–</span><span class="tc-ms" id="tcm-installments"></span></div>
+          <div class="tc-detail" id="tcd-installments">GET /api/installments</div>
+          <div class="tc-ts" id="tct-installments"></div>
+          <button class="tc-btn" onclick="runTest('installments')" id="tcb-installments">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-notifications">
+          <div class="tc-top">
+            <span class="tc-name">Notificações</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-notifications">–</span><span class="tc-ms" id="tcm-notifications"></span></div>
+          <div class="tc-detail" id="tcd-notifications">GET /api/notifications</div>
+          <div class="tc-ts" id="tct-notifications"></div>
+          <button class="tc-btn" onclick="runTest('notifications')" id="tcb-notifications">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-agent">
+          <div class="tc-top">
+            <span class="tc-name">IA Agent</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-agent">–</span><span class="tc-ms" id="tcm-agent"></span></div>
+          <div class="tc-detail" id="tcd-agent">Groq · GET /api/agent</div>
+          <div class="tc-ts" id="tct-agent"></div>
+          <button class="tc-btn" onclick="runTest('agent')" id="tcb-agent">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-payments">
+          <div class="tc-top">
+            <span class="tc-name">Pagamentos</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-payments">–</span><span class="tc-ms" id="tcm-payments"></span></div>
+          <div class="tc-detail" id="tcd-payments">Mercado Pago · GET /api/payments/history</div>
+          <div class="tc-ts" id="tct-payments"></div>
+          <button class="tc-btn" onclick="runTest('payments')" id="tcb-payments">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-reports">
+          <div class="tc-top">
+            <span class="tc-name">Relatórios</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-reports">–</span><span class="tc-ms" id="tcm-reports"></span></div>
+          <div class="tc-detail" id="tcd-reports">GET /api/reports</div>
+          <div class="tc-ts" id="tct-reports"></div>
+          <button class="tc-btn" onclick="runTest('reports')" id="tcb-reports">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-2fa">
+          <div class="tc-top">
+            <span class="tc-name">2FA</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-2fa">–</span><span class="tc-ms" id="tcm-2fa"></span></div>
+          <div class="tc-detail" id="tcd-2fa">GET /api/auth/2fa</div>
+          <div class="tc-ts" id="tct-2fa"></div>
+          <button class="tc-btn" onclick="runTest('2fa')" id="tcb-2fa">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <!-- Segurança -->
+        <div class="tc" id="tc-npm">
+          <div class="tc-top">
+            <span class="tc-name">npm audit</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-npm">–</span><span class="tc-ms" id="tcm-npm"></span></div>
+          <div class="tc-detail" id="tcd-npm">Dependências Node.js · CVEs</div>
+          <div class="tc-ts" id="tct-npm"></div>
+          <button class="tc-btn" onclick="runTest('npm')" id="tcb-npm">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+        <div class="tc" id="tc-trivy">
+          <div class="tc-top">
+            <span class="tc-name">Trivy</span>
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="tc-result"><span class="tc-status" id="tcs-trivy">–</span><span class="tc-ms" id="tcm-trivy"></span></div>
+          <div class="tc-detail" id="tcd-trivy">Container · HIGH/CRITICAL</div>
+          <div class="tc-ts" id="tct-trivy"></div>
+          <button class="tc-btn" onclick="runTest('trivy')" id="tcb-trivy">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Testar
+          </button>
+        </div>
+
+      </div><!-- /test-grid -->
+
+      <div class="footer">Testes executados via Vercel Edge · sem expor URLs internas</div>
+    </div>
+  </div>
+
 </div><!-- /page -->
 
 <!-- ── Bottom Tab Bar ── -->
 <nav class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('overview',this)">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
       <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
       <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
     </svg>
-    Visão Geral
+    Geral
   </button>
   <button class="tab-btn" onclick="switchTab('apps',this)">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
       <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
     </svg>
-    Aplicações
+    Apps
   </button>
   <button class="tab-btn" onclick="switchTab('history',this)">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
       <path d="M3 3v18h18"/><polyline points="7 16 11 11 15 14 19 9"/>
     </svg>
     Histórico
   </button>
   <button class="tab-btn" onclick="switchTab('security',this)">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
     </svg>
     Segurança
+  </button>
+  <button class="tab-btn" onclick="switchTab('tests',this)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+    </svg>
+    Testes
   </button>
 </nav>
 
@@ -1234,6 +1528,98 @@ async function runScan() {
     btn.disabled = false
     btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.1"/></svg> Executar agora`
   }
+}
+
+// ── Testes on-demand ──
+const SERVICE_IDS = ['servidor','db','frontend','auth','goals','installments','notifications','agent','payments','reports','2fa','npm','trivy']
+
+function fmtTs(ts) {
+  return new Date(ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})
+}
+
+function setTestCard(id, state, result) {
+  const card = document.getElementById('tc-' + id)
+  const sEl  = document.getElementById('tcs-' + id)
+  const mEl  = document.getElementById('tcm-' + id)
+  const dEl  = document.getElementById('tcd-' + id)
+  const tEl  = document.getElementById('tct-' + id)
+  const btn  = document.getElementById('tcb-' + id)
+  if (!card) return
+
+  card.className = 'tc ' + state
+
+  if (state === 'testing') {
+    sEl.innerHTML = `<span class="spin" style="width:12px;height:12px;border-width:2px"></span>`
+    mEl.textContent = ''
+    btn.disabled = true
+    return
+  }
+
+  if (result) {
+    sEl.textContent = result.ok ? '✓ OK' : '✗ Falhou'
+    mEl.textContent = result.ms ? `${result.ms}ms` : ''
+    dEl.textContent = result.detail || result.endpoint || ''
+    tEl.textContent = `Último teste: ${fmtTs(result.ts || Date.now())}`
+  }
+  btn.disabled = false
+}
+
+async function runTest(service) {
+  setTestCard(service, 'testing')
+  try {
+    const data = await fetch(`/api/test?service=${service}`).then(r => r.json())
+    const result = data.results?.[0]
+    if (result) setTestCard(service, result.ok ? 'ok' : 'fail', result)
+    else        setTestCard(service, 'fail', { ok: false, detail: 'Sem resposta' })
+  } catch (err) {
+    setTestCard(service, 'fail', { ok: false, detail: err.message, ms: 0 })
+  }
+}
+
+async function runAllTests() {
+  const btn     = document.getElementById('run-all-btn')
+  const prog    = document.getElementById('test-progress')
+  const fill    = document.getElementById('progress-fill')
+  const label   = document.getElementById('progress-label')
+  const counter = document.getElementById('progress-count')
+  const total   = SERVICE_IDS.length
+
+  btn.disabled = true
+  prog.classList.add('visible')
+  fill.style.width = '0%'
+  label.textContent = 'Iniciando testes…'
+  counter.textContent = `0/${total}`
+
+  SERVICE_IDS.forEach(id => setTestCard(id, 'testing'))
+
+  let done = 0
+
+  const results = await Promise.all(
+    SERVICE_IDS.map(async id => {
+      try {
+        const data   = await fetch(`/api/test?service=${id}`).then(r => r.json())
+        const result = data.results?.[0] || { ok: false, detail: 'Sem resposta' }
+        done++
+        fill.style.width  = `${Math.round(done / total * 100)}%`
+        counter.textContent = `${done}/${total}`
+        label.textContent = done === total ? 'Todos os testes concluídos' : 'A testar…'
+        setTestCard(id, result.ok ? 'ok' : 'fail', result)
+        return result
+      } catch (err) {
+        done++
+        fill.style.width  = `${Math.round(done / total * 100)}%`
+        counter.textContent = `${done}/${total}`
+        setTestCard(id, 'fail', { ok: false, detail: err.message, ms: 0 })
+        return { ok: false }
+      }
+    })
+  )
+
+  const passed = results.filter(r => r.ok).length
+  label.textContent = `${passed}/${total} passaram`
+  btn.disabled = false
+
+  setTimeout(() => prog.classList.remove('visible'), 4000)
 }
 
 // ── Init ──
