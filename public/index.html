@@ -419,6 +419,82 @@
 
     @media(min-width:600px){.test-grid{grid-template-columns:1fr 1fr 1fr}}
     @media(max-width:374px){.test-grid{grid-template-columns:1fr}}
+
+    /* ════════════════════════════════════
+       TAB 6 — ACESSOS
+    ════════════════════════════════════ */
+    .ac-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+    .ac-card{
+      background:var(--s1);border:1px solid var(--bd);border-radius:16px;
+      padding:14px 12px;display:flex;flex-direction:column;gap:4px;
+    }
+    .ac-card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3)}
+    .ac-card-val{font-size:26px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1}
+    .ac-card-val.ok   {color:var(--g)}
+    .ac-card-val.warn {color:var(--y)}
+    .ac-card-val.err  {color:var(--r)}
+    .ac-card-sub{font-size:10px;color:var(--t3)}
+
+    .ac-alert{
+      display:none;background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);
+      border-radius:12px;padding:10px 14px;margin-bottom:10px;
+      font-size:12px;font-weight:600;color:var(--r);
+      display:flex;align-items:center;gap:8px;
+    }
+    .ac-alert.hidden{display:none}
+
+    .ac-section-title{
+      font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+      color:var(--t3);margin:12px 0 6px;display:flex;align-items:center;gap:8px;
+    }
+    .ac-section-title::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+    /* Gráfico de barras — logins por hora */
+    .ac-chart{
+      background:var(--s1);border:1px solid var(--bd);border-radius:14px;
+      padding:12px;margin-bottom:10px;
+    }
+    .ac-chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:8px}
+    .ac-chart-bars{display:flex;align-items:flex-end;gap:2px;height:44px}
+    .ac-bar{flex:1;border-radius:2px 2px 0 0;min-width:0;transition:height .3s}
+    .ac-chart-labels{display:flex;justify-content:space-between;margin-top:4px}
+    .ac-chart-label{font-size:9px;color:var(--t3);font-variant-numeric:tabular-nums}
+
+    /* Lista de IPs suspeitos */
+    .ac-ip-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+    .ac-ip-row{
+      background:var(--s1);border:1px solid var(--bd);border-radius:10px;
+      padding:9px 12px;display:flex;align-items:center;gap:10px;
+    }
+    .ac-ip-addr{font-size:12px;font-weight:700;color:var(--t1);font-variant-numeric:tabular-nums;flex:1}
+    .ac-ip-count{font-size:11px;font-weight:700;color:var(--r)}
+    .ac-ip-label{font-size:10px;color:var(--t3)}
+
+    /* Lista de falhas recentes */
+    .ac-fail-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+    .ac-fail-row{
+      background:var(--s1);border:1px solid var(--bd);border-radius:10px;
+      padding:9px 12px;display:flex;align-items:center;gap:10px;
+    }
+    .ac-fail-email{font-size:11px;color:var(--t2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .ac-fail-ip{font-size:10px;color:var(--t3);font-variant-numeric:tabular-nums}
+    .ac-fail-time{font-size:10px;color:var(--t3);font-variant-numeric:tabular-nums;flex-shrink:0}
+
+    .ac-empty{
+      background:var(--s1);border:1px solid var(--bd);border-radius:12px;
+      padding:14px;text-align:center;font-size:12px;color:var(--t3);
+    }
+    .ac-refresh-btn{
+      display:flex;align-items:center;gap:5px;
+      background:var(--s1);border:1px solid var(--bd2);
+      color:var(--t2);border-radius:20px;padding:6px 12px;
+      font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s;
+    }
+    .ac-refresh-btn:active{opacity:.55}
+    .ac-refresh-btn:disabled{opacity:.35;cursor:not-allowed}
+
+    @media(min-width:600px){.ac-summary{grid-template-columns:repeat(4,1fr)}}
   </style>
 </head>
 <body>
@@ -1020,6 +1096,89 @@
     </div>
   </div>
 
+  <!-- ════════ TAB 6: ACESSOS ════════ -->
+  <div class="tab-content" id="tab-access">
+    <div style="margin-top:8px">
+
+      <!-- Header com botão refresh -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--t1)">Auditoria de Acessos</div>
+          <div style="font-size:10px;color:var(--t3)" id="ac-last-update">Últimas 24h · a carregar…</div>
+        </div>
+        <button class="ac-refresh-btn" id="ac-refresh-btn" onclick="fetchAccess()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.1"/></svg>
+          Actualizar
+        </button>
+      </div>
+
+      <!-- Alerta de força bruta -->
+      <div class="ac-alert hidden" id="ac-brute-alert">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span id="ac-brute-msg">Possível ataque de força bruta detectado</span>
+      </div>
+
+      <!-- Cards de resumo -->
+      <div class="ac-summary">
+        <div class="ac-card">
+          <div class="ac-card-label">Total 24h</div>
+          <div class="ac-card-val" id="ac-total">–</div>
+          <div class="ac-card-sub">tentativas</div>
+        </div>
+        <div class="ac-card">
+          <div class="ac-card-label">Sucessos</div>
+          <div class="ac-card-val ok" id="ac-ok">–</div>
+          <div class="ac-card-sub">logins ok</div>
+        </div>
+        <div class="ac-card">
+          <div class="ac-card-label">Falhas</div>
+          <div class="ac-card-val" id="ac-fail">–</div>
+          <div class="ac-card-sub" id="ac-fail-rate">–% taxa de falha</div>
+        </div>
+        <div class="ac-card">
+          <div class="ac-card-label">IPs suspeitos</div>
+          <div class="ac-card-val" id="ac-suspicious">–</div>
+          <div class="ac-card-sub">≥3 falhas/hora</div>
+        </div>
+      </div>
+
+      <!-- Gráfico de logins por hora -->
+      <div class="ac-chart">
+        <div class="ac-chart-title">Actividade por hora (UTC)</div>
+        <div class="ac-chart-bars" id="ac-chart-bars"></div>
+        <div class="ac-chart-labels">
+          <span class="ac-chart-label">00h</span>
+          <span class="ac-chart-label">06h</span>
+          <span class="ac-chart-label">12h</span>
+          <span class="ac-chart-label">18h</span>
+          <span class="ac-chart-label">23h</span>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:6px">
+          <span style="font-size:9px;color:var(--t3);display:flex;align-items:center;gap:4px">
+            <span style="width:8px;height:8px;background:var(--g);border-radius:2px;display:inline-block"></span>Logins OK
+          </span>
+          <span style="font-size:9px;color:var(--t3);display:flex;align-items:center;gap:4px">
+            <span style="width:8px;height:8px;background:var(--r);border-radius:2px;display:inline-block"></span>Falhas
+          </span>
+        </div>
+      </div>
+
+      <!-- IPs suspeitos (≥3 falhas na última hora) -->
+      <div class="ac-section-title">IPs suspeitos — última 1h</div>
+      <div class="ac-ip-list" id="ac-ip-list">
+        <div class="ac-empty">Sem IPs suspeitos</div>
+      </div>
+
+      <!-- Falhas recentes -->
+      <div class="ac-section-title">Tentativas falhadas recentes</div>
+      <div class="ac-fail-list" id="ac-fail-list">
+        <div class="ac-empty">Aguardando dados…</div>
+      </div>
+
+      <div class="footer">Dados em tempo real · emails mascarados por privacidade</div>
+    </div>
+  </div>
+
 </div><!-- /page -->
 
 <!-- ── Bottom Tab Bar ── -->
@@ -1055,6 +1214,13 @@
     </svg>
     Testes
   </button>
+  <button class="tab-btn" onclick="switchTab('access',this)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+    </svg>
+    Acessos
+  </button>
 </nav>
 
 <script>
@@ -1078,6 +1244,7 @@ function switchTab(name, btn) {
   btn.classList.add('active')
   if (name === 'history')  renderHistory()
   if (name === 'security') fetchSecurity()
+  if (name === 'access')   fetchAccess()
 }
 
 // ── Helpers ──
@@ -1620,6 +1787,113 @@ async function runAllTests() {
   btn.disabled = false
 
   setTimeout(() => prog.classList.remove('visible'), 4000)
+}
+
+// ── Acessos ──
+let accessData = null
+
+async function fetchAccess() {
+  const btn = document.getElementById('ac-refresh-btn')
+  if (btn) { btn.disabled = true }
+  try {
+    const data = await fetch('/api/access?type=login-stats').then(r => r.json())
+    if (data.error) throw new Error(data.error)
+    accessData = data
+    renderAccess(data)
+  } catch (err) {
+    document.getElementById('ac-last-update').textContent = `Erro: ${err.message}`
+  } finally {
+    if (btn) btn.disabled = false
+  }
+}
+
+function renderAccess(data) {
+  if (!data) return
+
+  // Timestamp
+  const el = document.getElementById('ac-last-update')
+  if (el) el.textContent = `Últimas 24h · atualizado às ${fmtTime(data.ts)}`
+
+  // Alerta de força bruta
+  const alert = document.getElementById('ac-brute-alert')
+  const bruteMsg = document.getElementById('ac-brute-msg')
+  if (alert) {
+    if (data.summary.bruteForce) {
+      alert.classList.remove('hidden')
+      bruteMsg.textContent = `Possível força bruta: ${data.suspiciousIPs.length} IP(s) com ≥3 falhas na última hora`
+    } else {
+      alert.classList.add('hidden')
+    }
+  }
+
+  // Cards de resumo
+  const s = data.summary
+  const failColor = s.failRate > 20 ? 'err' : s.failRate > 5 ? 'warn' : ''
+  const suspColor = s.bruteForce ? 'err' : s.suspiciousIPs?.length > 0 ? 'warn' : 'ok'
+
+  function setCard(id, val, cls) {
+    const el = document.getElementById(id)
+    if (!el) return
+    el.textContent = val
+    el.className = `ac-card-val${cls ? ' ' + cls : ''}`
+  }
+  setCard('ac-total', s.total)
+  setCard('ac-ok', s.ok, 'ok')
+  setCard('ac-fail', s.failed, failColor)
+  setCard('ac-suspicious', data.suspiciousIPs.length, suspColor)
+
+  const failRateEl = document.getElementById('ac-fail-rate')
+  if (failRateEl) failRateEl.textContent = `${s.failRate}% taxa de falha`
+
+  // Gráfico por hora
+  const barsEl = document.getElementById('ac-chart-bars')
+  if (barsEl && data.byHour) {
+    const maxVal = Math.max(...data.byHour.map(h => h.ok + h.fail), 1)
+    barsEl.innerHTML = data.byHour.map(h => {
+      const total  = h.ok + h.fail
+      const hOk    = Math.max(total ? Math.round(h.ok   / maxVal * 44) : 0, total > 0 ? 2 : 0)
+      const hFail  = Math.max(total ? Math.round(h.fail / maxVal * 44) : 0, h.fail > 0 ? 2 : 0)
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:stretch;gap:1px;justify-content:flex-end" title="${h.hour}h: ${h.ok} ok, ${h.fail} falhas">
+        ${h.fail  ? `<div class="ac-bar" style="height:${hFail}px;background:var(--r);opacity:.8"></div>` : ''}
+        ${h.ok    ? `<div class="ac-bar" style="height:${hOk}px;background:var(--g);opacity:.7"></div>` : ''}
+        ${!total  ? `<div class="ac-bar" style="height:2px;background:var(--bd)"></div>` : ''}
+      </div>`
+    }).join('')
+  }
+
+  // IPs suspeitos
+  const ipEl = document.getElementById('ac-ip-list')
+  if (ipEl) {
+    if (!data.suspiciousIPs.length) {
+      ipEl.innerHTML = `<div class="ac-empty">✓ Sem IPs suspeitos na última hora</div>`
+    } else {
+      ipEl.innerHTML = data.suspiciousIPs.map(ip =>
+        `<div class="ac-ip-row">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--r)" stroke-width="2.5" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="ac-ip-addr">${ip.ip}</span>
+          <span class="ac-ip-count">${ip.count}×</span>
+          <span class="ac-ip-label">em 1h</span>
+        </div>`
+      ).join('')
+    }
+  }
+
+  // Falhas recentes
+  const failEl = document.getElementById('ac-fail-list')
+  if (failEl) {
+    if (!data.recentFails.length) {
+      failEl.innerHTML = `<div class="ac-empty">✓ Sem tentativas falhadas nas últimas 24h</div>`
+    } else {
+      failEl.innerHTML = data.recentFails.map(f =>
+        `<div class="ac-fail-row">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--r)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <span class="ac-fail-email">${f.email}</span>
+          <span class="ac-fail-ip">${f.ip}</span>
+          <span class="ac-fail-time">${fmtTime(f.at)}</span>
+        </div>`
+      ).join('')
+    }
+  }
 }
 
 // ── Init ──
