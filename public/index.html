@@ -6,40 +6,61 @@
   <title>Finance Monitor</title>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="theme-color" content="#111111"/>
+  <meta name="theme-color" content="#0a0a0f"/>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="icon" href="/icon-192.png"/>
   <link rel="apple-touch-icon" href="/icon-192.png"/>
+  <!-- Fonte: Sora (mesma do finance-app) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" /></noscript>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
     :root{
-      --bg:  #111111;
-      --s1:  #1a1a1a;
-      --s2:  rgba(255,255,255,.04);
-      --s3:  #1a1a1a;
+      --bg:  #0a0a0f;
+      --s1:  rgba(255,255,255,.045);
+      --s2:  rgba(255,255,255,.05);
+      --s3:  rgba(255,255,255,.03);
       --bd:  rgba(255,255,255,.10);
       --bd2: rgba(255,255,255,.18);
       --t1:  #ffffff;
       --t2:  rgba(255,255,255,.45);
       --t3:  rgba(255,255,255,.25);
-      --g:   #4ac46e;
+      --g:   #4ae2ac;
       --r:   #ff4757;
       --y:   #ffc107;
+      --cp:  #7b2fff;
+      --cb:  #00b4d8;
+      --grad: linear-gradient(135deg,var(--cp),var(--cb));
     }
 
     html,body{height:100%}
     body{
       background:var(--bg);color:var(--t1);
-      font-family:-apple-system,'SF Pro Text',system-ui,sans-serif;
+      font-family:'Sora',-apple-system,system-ui,sans-serif;
       -webkit-font-smoothing:antialiased;
       padding-top:env(safe-area-inset-top,0px);
       padding-bottom:calc(60px + env(safe-area-inset-bottom,0px));
       overflow-x:hidden;
+      position:relative;
+    }
+
+    /* ── Glow de fundo ── */
+    .bg-glow{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+    .bg-glow::before,.bg-glow::after{
+      content:'';position:absolute;width:60vmax;height:60vmax;border-radius:50%;
+      filter:blur(90px);opacity:.16;animation:blob-drift 26s ease-in-out infinite;
+    }
+    .bg-glow::before{background:var(--cp);top:-20vmax;left:-15vmax}
+    .bg-glow::after {background:var(--cb);bottom:-25vmax;right:-15vmax;animation-delay:-13s}
+    @keyframes blob-drift{
+      0%,100%{transform:translate(0,0) scale(1)}
+      50%{transform:translate(4vmax,3vmax) scale(1.08)}
     }
 
     /* ── Layout ── */
-    .page{max-width:600px;margin:0 auto;padding:0 16px}
+    .page{max-width:600px;margin:0 auto;padding:0 16px;position:relative}
 
     /* ── Header ── */
     .hdr{
@@ -63,8 +84,8 @@
     .route-chip-ms{font-size:10px;font-variant-numeric:tabular-nums;color:var(--t3);flex-shrink:0}
     .hdr-btn{
       display:flex;align-items:center;gap:5px;
-      background:var(--s1);border:1px solid var(--bd2);
-      color:var(--t2);border-radius:20px;padding:6px 12px;
+      background:var(--s1);border:1px solid rgba(123,47,255,.3);
+      color:var(--t1);border-radius:20px;padding:6px 12px;
       font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;
       -webkit-tap-highlight-color:transparent;transition:opacity .12s;
     }
@@ -87,8 +108,8 @@
       transition:color .15s;font-size:10px;font-weight:600;
     }
     .tab-btn svg{transition:opacity .15s}
-    .tab-btn.active{color:var(--g)}
-    .tab-btn.active svg{opacity:1}
+    .tab-btn.active{color:var(--cp)}
+    .tab-btn.active svg{opacity:1;filter:drop-shadow(0 0 6px rgba(123,47,255,.5))}
     .tab-btn svg{opacity:.4}
 
     /* ── Tab Content ── */
@@ -115,24 +136,41 @@
     .spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.08);border-top-color:var(--g);border-radius:50%;animation:rot .7s linear infinite;flex-shrink:0}
     @keyframes rot{to{transform:rotate(360deg)}}
 
+    /* ── Glass-morphism + hover — aplica a todos os cards que usam var(--s1)/var(--s2) ── */
+    .hero, .svc-card, .app-card, .incident-row, .incident-empty,
+    .uptime-card, .timeline-wrap, .hist-row, .last-check-card,
+    .sec-tool-card, .tc, .ac-card, .ac-chart, .ac-ip-row, .ac-fail-row,
+    .ac-empty, .test-progress{
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    @media(hover:hover){
+      .app-card:hover, .sec-tool-card:hover, .uptime-card:hover,
+      .svc-card:hover, .ac-card:hover, .tc:hover{
+        transform:translateY(-2px);
+        border-color:rgba(123,47,255,.35);
+        box-shadow:0 8px 24px rgba(123,47,255,.12);
+      }
+    }
+
     /* ════════════════════════════════════
        TAB 1 — VISÃO GERAL
     ════════════════════════════════════ */
 
     /* Hero */
     .hero{
-      border-radius:20px;padding:20px;margin-bottom:12px;
+      border-radius:24px;padding:20px;margin-bottom:12px;
       position:relative;overflow:hidden;transition:background .4s,border-color .4s;
     }
-    .hero-ok  {background:linear-gradient(135deg,rgba(74,196,110,.13),rgba(74,196,110,.04));border:1px solid rgba(74,196,110,.22)}
+    .hero-ok  {background:linear-gradient(135deg,rgba(74,226,172,.13),rgba(74,226,172,.04));border:1px solid rgba(74,226,172,.22)}
     .hero-err {background:linear-gradient(135deg,rgba(224,92,92,.13),rgba(224,92,92,.04));border:1px solid rgba(224,92,92,.22)}
-    .hero-load{background:var(--s1);border:1px solid var(--bd)}
+    .hero-load{background:linear-gradient(135deg,rgba(123,47,255,.13),rgba(0,180,216,.05));border:1px solid rgba(123,47,255,.22)}
 
     .hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
     .hero-left{display:flex;align-items:center;gap:10px}
     .hero-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t2)}
     .hero-status{font-size:24px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
-    .hero-ok   .hero-status{color:var(--g)}
+    .hero-ok   .hero-status{background:linear-gradient(135deg,var(--g),#00d9a3);-webkit-background-clip:text;background-clip:text;color:transparent}
     .hero-err  .hero-status{color:var(--r)}
     .hero-load .hero-status{color:var(--t2)}
 
@@ -199,7 +237,7 @@
     .app-section-title::after{content:'';flex:1;height:1px;background:var(--bd)}
 
     .app-card{
-      background:var(--s1);border:1px solid var(--bd);border-radius:18px;
+      background:var(--s1);border:1px solid var(--bd);border-radius:22px;
       overflow:hidden;margin-bottom:8px;
     }
     .app-card-head{
@@ -300,6 +338,12 @@
       .hdr-name{font-size:15px}
       .sec-top{flex-direction:column;align-items:flex-start;gap:8px}
     }
+    @media(min-width:900px){
+      .page{max-width:920px;padding:0 24px}
+      .app-section{margin-bottom:24px}
+      .hero{padding:28px}
+      .hero-status{font-size:28px}
+    }
 
     /* ════════════════════════════════════
        TAB 4 — SEGURANÇA
@@ -310,17 +354,18 @@
     .sec-top-sub{font-size:10px;color:var(--t3)}
     .sec-run-btn{
       display:flex;align-items:center;gap:5px;
-      background:var(--s1);border:1px solid rgba(74,196,110,.3);
-      color:var(--g);border-radius:20px;padding:6px 13px;
+      background:var(--grad);border:none;
+      color:#fff;border-radius:20px;padding:6px 13px;
       font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;
-      -webkit-tap-highlight-color:transparent;transition:opacity .12s;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s,transform .12s;
+      box-shadow:0 4px 14px rgba(123,47,255,.25);
     }
     .sec-run-btn:active{opacity:.55}
     .sec-run-btn:disabled{opacity:.35;cursor:not-allowed}
 
     .sec-tool-card{
       background:var(--s1);border:1px solid var(--bd);
-      border-radius:18px;overflow:hidden;margin-bottom:10px;
+      border-radius:22px;overflow:hidden;margin-bottom:10px;
     }
     .sec-tool-head{
       padding:14px 16px;display:flex;align-items:center;gap:12px;
@@ -362,10 +407,11 @@
 
     .test-run-all-btn{
       display:flex;align-items:center;gap:6px;
-      background:var(--g);color:#000;
+      background:var(--grad);color:#fff;
       border:none;border-radius:20px;padding:7px 14px;
       font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
       -webkit-tap-highlight-color:transparent;transition:opacity .12s;
+      box-shadow:0 4px 14px rgba(123,47,255,.25);
     }
     .test-run-all-btn:active{opacity:.7}
     .test-run-all-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -418,6 +464,7 @@
     .tc-btn:disabled{opacity:.3;cursor:not-allowed}
 
     @media(min-width:600px){.test-grid{grid-template-columns:1fr 1fr 1fr}}
+    @media(min-width:900px){.test-grid{grid-template-columns:repeat(4,1fr)}}
     @media(max-width:374px){.test-grid{grid-template-columns:1fr}}
 
     /* ════════════════════════════════════
@@ -486,8 +533,8 @@
     }
     .ac-refresh-btn{
       display:flex;align-items:center;gap:5px;
-      background:var(--s1);border:1px solid var(--bd2);
-      color:var(--t2);border-radius:20px;padding:6px 12px;
+      background:var(--s1);border:1px solid rgba(123,47,255,.3);
+      color:var(--t1);border-radius:20px;padding:6px 12px;
       font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;
       -webkit-tap-highlight-color:transparent;transition:opacity .12s;
     }
@@ -498,6 +545,8 @@
   </style>
 </head>
 <body>
+
+<div class="bg-glow"></div>
 
 <div class="page">
 
@@ -567,7 +616,7 @@
       <div class="incident-empty">Aguardando dados…</div>
     </div>
 
-    <div class="footer">Atualização automática a cada <b style="color:var(--g)">30s</b></div>
+    <div class="footer">Atualização automática a cada <b style="color:var(--cp)">30s</b></div>
   </div>
 
   <!-- ════════ TAB 2: APLICAÇÕES ════════ -->
@@ -580,8 +629,8 @@
       <!-- Cloud Run -->
       <div class="app-card">
         <div class="app-card-head">
-          <div class="app-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.8" stroke-linecap="round">
+          <div class="app-icon" style="background:rgba(0,180,216,.12)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cb)" stroke-width="1.8" stroke-linecap="round">
               <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
             </svg>
           </div>
@@ -630,8 +679,8 @@
       <!-- API + DB -->
       <div class="app-card">
         <div class="app-card-head">
-          <div class="app-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.8" stroke-linecap="round">
+          <div class="app-icon" style="background:rgba(123,47,255,.12)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cp)" stroke-width="1.8" stroke-linecap="round">
               <path d="M4 6c0 1.7 3.6 3 8 3s8-1.3 8-3-3.6-3-8-3-8 1.3-8 3z"/>
               <path d="M4 6v4c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 10v4c0 1.7 3.6 3 8 3s8-1.3 8-3v-4"/>
             </svg>
@@ -1223,7 +1272,37 @@
   </button>
 </nav>
 
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script>
+// ── Animação (GSAP) ──
+const hasGsap = typeof gsap !== 'undefined'
+
+// Entrada em stagger para cards recém-renderizados
+function animateIn(selectorOrEl) {
+  if (!hasGsap) return
+  const els = typeof selectorOrEl === 'string' ? document.querySelectorAll(selectorOrEl) : selectorOrEl
+  if (!els || !els.length) return
+  gsap.fromTo(els, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .45, stagger: .04, ease: 'power2.out', overwrite: true })
+}
+
+// Conta até o valor numérico novo (ignora textos como "–" ou "Offline")
+function animateNumber(el, newText) {
+  if (!el) return
+  const match = /^(-?[\d.]+)(.*)$/.exec(String(newText))
+  if (!hasGsap || !match) { el.textContent = newText; return }
+  const [, numStr, suffix] = match
+  const to = parseFloat(numStr)
+  const decimals = (numStr.split('.')[1] || '').length
+  const from = parseFloat(el.textContent) || 0
+  if (!isFinite(to)) { el.textContent = newText; return }
+  const proxy = { v: from }
+  gsap.to(proxy, {
+    v: to, duration: .6, ease: 'power2.out', overwrite: true,
+    onUpdate: () => { el.textContent = proxy.v.toFixed(decimals) + suffix },
+    onComplete: () => { el.textContent = to.toFixed(decimals) + suffix },
+  })
+}
+
 // ── Storage ──
 const HIST_KEY  = 'fm_history_v2'
 const MAX_HIST  = 1440 // 24h a 1/min
@@ -1235,13 +1314,18 @@ let history = loadHist()
 let timer   = 0
 let REFRESH = 30
 let totalChecks = 0
+let historyAnimated  = false
+let securityAnimated = false
+let accessAnimated   = false
 
 // ── Tab navigation ──
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'))
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
-  document.getElementById('tab-' + name).classList.add('active')
+  const target = document.getElementById('tab-' + name)
+  target.classList.add('active')
   btn.classList.add('active')
+  if (hasGsap) gsap.fromTo(target, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .3, ease: 'power2.out' })
   if (name === 'history')  renderHistory()
   if (name === 'security') fetchSecurity()
   if (name === 'access')   fetchAccess()
@@ -1255,6 +1339,17 @@ const fmtDate = ts => new Date(ts).toLocaleDateString('pt-BR',{day:'2-digit',mon
 function uptimePct(arr) {
   if (!arr.length) return null
   return (arr.filter(h => h.ok).length / arr.length * 100).toFixed(1)
+}
+
+// Tween de "123ms" preservando o <small>ms</small>
+function animateMs(el, ms) {
+  if (!hasGsap) { el.innerHTML = `${ms}<small>ms</small>`; return }
+  const from  = parseFloat(el.textContent) || 0
+  const proxy = { v: from }
+  gsap.to(proxy, {
+    v: ms, duration: .5, ease: 'power2.out', overwrite: true,
+    onUpdate: () => { el.innerHTML = `${Math.round(proxy.v)}<small>ms</small>` },
+  })
 }
 
 function uptimeClass(pct) {
@@ -1344,7 +1439,7 @@ function renderOverview(data) {
     ? 'Todos os sistemas operacionais'
     : failedSvcs.length ? `Falha: ${failedSvcs.join(', ')}` : 'Degradação detectada'
   document.getElementById('h-ts').textContent = `Atualizado às ${fmtTime(data.ts)}`
-  document.getElementById('h-uptime').textContent = upt !== null ? `${upt}% 1h` : '–%'
+  animateNumber(document.getElementById('h-uptime'), upt !== null ? `${upt}% 1h` : '–%')
   renderPings(last20)
 
   // Service cards
@@ -1354,7 +1449,8 @@ function renderOverview(data) {
     const stEl = document.getElementById('st-' + id)
     if (!check) return
     card.className = `svc-card ${check.ok ? 'ok' : 'err'}`
-    msEl.innerHTML = check.ok ? `${check.ms}<small>ms</small>` : `<small style="font-size:14px">Offline</small>`
+    if (check.ok) animateMs(msEl, check.ms)
+    else msEl.innerHTML = `<small style="font-size:14px">Offline</small>`
     stEl.textContent = check.ok ? (check.ms < 400 ? 'Rápido' : check.ms < 1200 ? 'Normal' : 'Lento') : (check.detail || 'Sem resposta')
     stEl.style.color = check.ok ? lc(check.ms) : 'var(--r)'
 
@@ -1381,6 +1477,8 @@ function renderOverview(data) {
   updateCard('frontend', fe,  feHist)
 
   renderIncidents(getIncidents(history))
+
+  if (totalChecks === 1) animateIn('#tab-overview .svc-card, #tab-overview .incident-row')
 }
 
 // ── Render: Módulos da API ──
@@ -1455,6 +1553,8 @@ function renderApps(data) {
   }
 
   renderRoutes(data?.routes)
+
+  if (totalChecks === 1) animateIn('#tab-apps .app-card')
 }
 
 // ── Render: Histórico ──
@@ -1466,7 +1566,7 @@ function renderHistory() {
   function setUptime(id, subId, arr, label) {
     const pct = uptimePct(arr)
     const el  = document.getElementById(id)
-    el.textContent = pct !== null ? `${pct}%` : '–%'
+    animateNumber(el, pct !== null ? `${pct}%` : '–%')
     el.className   = `uptime-val ${uptimeClass(pct)}`
     const ok = arr.filter(h => h.ok).length
     document.getElementById(subId).textContent = pct !== null ? `${ok}/${arr.length} checks OK` : 'Sem dados'
@@ -1524,6 +1624,8 @@ function renderHistory() {
       </div>`
     }).join('')
   }</div>`
+
+  if (!historyAnimated) { animateIn('.uptime-card, .last-check-card'); historyAnimated = true }
 }
 
 // ── Main check ──
@@ -1671,6 +1773,8 @@ function renderSecurity(data) {
 
   const latest = [data.npm_audit?.runAt, data.trivy?.runAt].filter(Boolean).sort().pop()
   document.getElementById('sec-next').textContent = nextScanIn(latest)
+
+  if (!securityAnimated) { animateIn('.sec-tool-card'); securityAnimated = true }
 }
 
 async function fetchSecurity() {
@@ -1767,14 +1871,16 @@ async function runAllTests() {
         const data   = await fetch(`/api/test?service=${id}`).then(r => r.json())
         const result = data.results?.[0] || { ok: false, detail: 'Sem resposta' }
         done++
-        fill.style.width  = `${Math.round(done / total * 100)}%`
+        if (hasGsap) gsap.to(fill, { width: `${Math.round(done / total * 100)}%`, duration: .3, ease: 'power2.out', overwrite: true })
+        else fill.style.width = `${Math.round(done / total * 100)}%`
         counter.textContent = `${done}/${total}`
         label.textContent = done === total ? 'Todos os testes concluídos' : 'A testar…'
         setTestCard(id, result.ok ? 'ok' : 'fail', result)
         return result
       } catch (err) {
         done++
-        fill.style.width  = `${Math.round(done / total * 100)}%`
+        if (hasGsap) gsap.to(fill, { width: `${Math.round(done / total * 100)}%`, duration: .3, ease: 'power2.out', overwrite: true })
+        else fill.style.width = `${Math.round(done / total * 100)}%`
         counter.textContent = `${done}/${total}`
         setTestCard(id, 'fail', { ok: false, detail: err.message, ms: 0 })
         return { ok: false }
@@ -1834,7 +1940,7 @@ function renderAccess(data) {
   function setCard(id, val, cls) {
     const el = document.getElementById(id)
     if (!el) return
-    el.textContent = val
+    animateNumber(el, val)
     el.className = `ac-card-val${cls ? ' ' + cls : ''}`
   }
   setCard('ac-total', s.total)
@@ -1894,6 +2000,8 @@ function renderAccess(data) {
       ).join('')
     }
   }
+
+  if (!accessAnimated) { animateIn('.ac-card'); accessAnimated = true }
 }
 
 // ── Init ──
