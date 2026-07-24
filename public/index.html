@@ -87,9 +87,9 @@
       background:var(--s1);border:1px solid rgba(123,47,255,.3);
       color:var(--t1);border-radius:20px;padding:6px 12px;
       font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;
-      -webkit-tap-highlight-color:transparent;transition:opacity .12s;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s,transform .12s;
     }
-    .hdr-btn:active{opacity:.55}
+    .hdr-btn:active{opacity:.55;transform:scale(.95)}
     #cd{font-variant-numeric:tabular-nums;min-width:20px;text-align:right}
 
     /* ── Bottom Tab Bar ── */
@@ -117,6 +117,11 @@
     .tab-content.active{display:block}
 
     /* ── Dots ── */
+    .h-dot-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}
+    .ping-ring{
+      position:absolute;width:8px;height:8px;border-radius:50%;
+      border:1.5px solid var(--g);opacity:0;pointer-events:none;
+    }
     .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
     .d-ok {background:var(--g);box-shadow:0 0 8px rgba(74,196,110,.7);animation:p-ok 2.5s ease infinite}
     .d-err{background:var(--r);box-shadow:0 0 8px rgba(224,92,92,.7);animation:p-err 1.6s ease infinite}
@@ -135,6 +140,10 @@
     /* ── Spinner ── */
     .spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.08);border-top-color:var(--g);border-radius:50%;animation:rot .7s linear infinite;flex-shrink:0}
     @keyframes rot{to{transform:rotate(360deg)}}
+
+    /* Flash — dispara só quando um status muda de verdade (ok↔erro), não a cada refresh */
+    @keyframes flash-pop{0%{transform:scale(1)}35%{transform:scale(1.06)}100%{transform:scale(1)}}
+    .flash{animation:flash-pop .5s ease}
 
     /* ── Glass-morphism + hover — aplica a todos os cards que usam var(--s1)/var(--s2) ── */
     .hero, .svc-card, .app-card, .incident-row, .incident-empty,
@@ -286,7 +295,7 @@
     .bar-chart{display:flex;align-items:flex-end;gap:2px;height:32px}
     .bar{
       flex:1;border-radius:2px 2px 0 0;min-width:0;
-      transition:height .3s,background .3s;
+      transition:background .3s; /* height é animado via GSAP (growBars) */
     }
 
     /* ════════════════════════════════════
@@ -376,7 +385,7 @@
       -webkit-tap-highlight-color:transparent;transition:opacity .12s,transform .12s;
       box-shadow:0 4px 14px rgba(123,47,255,.25);
     }
-    .sec-run-btn:active{opacity:.55}
+    .sec-run-btn:active{opacity:.85;transform:scale(.95)} /* fundo em gradiente — opacidade mais leve pra manter o roxo visível */
     .sec-run-btn:disabled{opacity:.35;cursor:not-allowed}
 
     .sec-tool-card{
@@ -426,10 +435,10 @@
       background:var(--grad);color:#fff;
       border:none;border-radius:20px;padding:7px 14px;
       font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
-      -webkit-tap-highlight-color:transparent;transition:opacity .12s;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s,transform .12s;
       box-shadow:0 4px 14px rgba(123,47,255,.25);
     }
-    .test-run-all-btn:active{opacity:.7}
+    .test-run-all-btn:active{opacity:.85;transform:scale(.95)}
     .test-run-all-btn:disabled{opacity:.4;cursor:not-allowed}
 
     /* Barra de progresso */
@@ -474,9 +483,9 @@
       background:var(--s2);border:1px solid var(--bd);
       color:var(--t2);border-radius:8px;padding:4px 0;width:100%;
       font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;
-      -webkit-tap-highlight-color:transparent;transition:opacity .12s;margin-top:2px;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s,transform .12s;margin-top:2px;
     }
-    .tc-btn:active{opacity:.55}
+    .tc-btn:active{opacity:.55;transform:scale(.95)}
     .tc-btn:disabled{opacity:.3;cursor:not-allowed}
 
     @media(min-width:600px){.test-grid{grid-template-columns:1fr 1fr 1fr}}
@@ -519,7 +528,7 @@
     }
     .ac-chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:8px}
     .ac-chart-bars{display:flex;align-items:flex-end;gap:2px;height:44px}
-    .ac-bar{flex:1;border-radius:2px 2px 0 0;min-width:0;transition:height .3s}
+    .ac-bar{flex:1;border-radius:2px 2px 0 0;min-width:0} /* height é animado via GSAP (growBars) */
     .ac-chart-labels{display:flex;justify-content:space-between;margin-top:4px}
     .ac-chart-label{font-size:9px;color:var(--t3);font-variant-numeric:tabular-nums}
 
@@ -552,9 +561,9 @@
       background:var(--s1);border:1px solid rgba(123,47,255,.3);
       color:var(--t1);border-radius:20px;padding:6px 12px;
       font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;
-      -webkit-tap-highlight-color:transparent;transition:opacity .12s;
+      -webkit-tap-highlight-color:transparent;transition:opacity .12s,transform .12s;
     }
-    .ac-refresh-btn:active{opacity:.55}
+    .ac-refresh-btn:active{opacity:.55;transform:scale(.95)}
     .ac-refresh-btn:disabled{opacity:.35;cursor:not-allowed}
 
     @media(min-width:600px){.ac-summary{grid-template-columns:repeat(4,1fr)}}
@@ -591,7 +600,10 @@
     <div class="hero hero-load" id="hero">
       <div class="hero-top">
         <div class="hero-left">
-          <span class="dot d-neu" id="h-dot"></span>
+          <span class="h-dot-wrap">
+            <span class="dot d-neu" id="h-dot"></span>
+            <span class="ping-ring" id="h-ping-ring"></span>
+          </span>
           <span class="hero-label">Status geral</span>
         </div>
         <span class="hero-uptime" id="h-uptime">–%</span>
@@ -1317,11 +1329,20 @@ const hasScrollTrigger = hasGsap && typeof ScrollTrigger !== 'undefined'
 if (hasScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger)
   const REVEAL_SEL = '.hero, .svc-card, .app-card, .uptime-card, .timeline-wrap, .last-check-card, .sec-tool-card, .tc, .ac-card, .ac-chart'
-  gsap.utils.toArray(REVEAL_SEL).forEach((el, i) => {
-    gsap.fromTo(el, { opacity: 0, y: 24 }, {
-      opacity: 1, y: 0, duration: .5, ease: 'power2.out', delay: (i % 6) * 0.04,
-      scrollTrigger: { trigger: el, start: 'top 92%', toggleActions: 'play none none none' },
-    })
+  ScrollTrigger.batch(REVEAL_SEL, {
+    start: 'top 92%',
+    onEnter: batch => gsap.fromTo(batch,
+      { opacity: 0, y: 28, scale: .96 },
+      { opacity: 1, y: 0, scale: 1, duration: .55, ease: 'power2.out', stagger: .07, overwrite: true },
+    ),
+  })
+  // Ícones dão um "pop" com leve rotação, logo depois do card aparecer
+  ScrollTrigger.batch('.svc-card-icon, .app-icon, .sec-tool-icon', {
+    start: 'top 92%',
+    onEnter: batch => gsap.fromTo(batch,
+      { scale: 0, rotate: -25, opacity: 0 },
+      { scale: 1, rotate: 0, opacity: 1, duration: .5, delay: .12, ease: 'back.out(2.2)', stagger: .07, overwrite: true },
+    ),
   })
 }
 
@@ -1391,6 +1412,33 @@ function animateMs(el, ms) {
   })
 }
 
+// Flash breve — chamar só quando um status muda de verdade
+function flashEl(el) {
+  if (!el) return
+  el.classList.remove('flash')
+  void el.offsetWidth // força reflow pra reiniciar a animação CSS
+  el.classList.add('flash')
+}
+
+// "Ping" de radar no dot do hero — reforça que o check acabou de acontecer
+function pingRadar(ok) {
+  if (!hasGsap) return
+  const ring = document.getElementById('h-ping-ring')
+  if (!ring) return
+  ring.style.borderColor = ok ? 'var(--g)' : 'var(--r)'
+  gsap.fromTo(ring, { scale: .6, opacity: .8 }, { scale: 2.4, opacity: 0, duration: .9, ease: 'power2.out', overwrite: true })
+}
+
+// Anima barras de gráfico crescendo do 0 até a altura real (data-h)
+function growBars(container) {
+  if (!container) return
+  const bars = container.querySelectorAll('[data-h]')
+  if (!hasGsap) { bars.forEach(b => { b.style.height = b.dataset.h }); return }
+  gsap.fromTo(bars, { height: 0 }, {
+    height: (i, t) => t.dataset.h, duration: .5, ease: 'power2.out', stagger: .015, overwrite: true,
+  })
+}
+
 function uptimeClass(pct) {
   if (pct === null) return 'good'
   const n = parseFloat(pct)
@@ -1409,8 +1457,9 @@ function barChart(containerId, data, maxMs) {
     if (d === null) return `<div class="bar" style="height:20%;background:var(--s2)"></div>`
     const h   = Math.max(8, Math.round((d.ms / max) * 100))
     const col = d.ok ? lc(d.ms) : 'var(--r)'
-    return `<div class="bar" style="height:${h}%;background:${col};opacity:.85" title="${d.ms}ms"></div>`
+    return `<div class="bar" data-h="${h}%" style="height:0%;background:${col};opacity:.85" title="${d.ms}ms"></div>`
   }).join('')
+  growBars(el)
 }
 
 // ── Ping mini-bar (hero) ──
@@ -1473,6 +1522,7 @@ function renderOverview(data) {
   const hero = document.getElementById('hero')
   hero.className = `hero hero-${data.ok ? 'ok' : 'err'}`
   document.getElementById('h-dot').className = `dot d-${data.ok ? 'ok' : 'err'}`
+  pingRadar(data.ok)
   const failedSvcs = data.checks.filter(c => !c.ok).map(c => c.name)
   document.getElementById('h-status').textContent = data.ok
     ? 'Todos os sistemas operacionais'
@@ -1487,7 +1537,10 @@ function renderOverview(data) {
     const msEl = document.getElementById('ms-' + id)
     const stEl = document.getElementById('st-' + id)
     if (!check) return
+    const changed = card.dataset.ok !== undefined && card.dataset.ok !== String(check.ok)
+    card.dataset.ok = String(check.ok)
     card.className = `svc-card ${check.ok ? 'ok' : 'err'}`
+    if (changed) flashEl(card)
     if (check.ok) animateMs(msEl, check.ms)
     else msEl.innerHTML = `<small style="font-size:14px">Offline</small>`
     stEl.textContent = check.ok ? (check.ms < 400 ? 'Rápido' : check.ms < 1200 ? 'Normal' : 'Lento') : (check.detail || 'Sem resposta')
@@ -1502,9 +1555,10 @@ function renderOverview(data) {
         if (!d) return `<div style="flex:1;height:30%;background:var(--s2);border-radius:2px 2px 0 0"></div>`
         const h   = Math.max(20, Math.round((d.ms / 2000) * 100))
         const col = d.ok ? lc(d.ms) : 'var(--r)'
-        return `<div style="flex:1;height:${Math.min(h,100)}%;background:${col};opacity:.7;border-radius:2px 2px 0 0"></div>`
+        return `<div class="bar" data-h="${Math.min(h,100)}%" style="flex:1;height:0%;background:${col};opacity:.7;border-radius:2px 2px 0 0"></div>`
       }).join('')
     }</div>`
+    growBars(spEl)
   }
 
   const svrHist = history.map(h => h.servidor).filter(Boolean)
@@ -1557,8 +1611,11 @@ function renderApps(data) {
 
   function setBadge(id, ok) {
     const el = document.getElementById(id)
+    const changed = el.dataset.ok !== undefined && el.dataset.ok !== String(ok)
+    el.dataset.ok = String(ok)
     el.className = `badge ${ok ? 'b-ok' : 'b-err'}`
     el.textContent = ok ? 'Online' : 'Offline'
+    if (changed) flashEl(el)
   }
   function setMetric(id, val, cls) {
     const el = document.getElementById(id)
@@ -1628,8 +1685,9 @@ function renderHistory() {
     if (!b) return `<div class="tl-bar" style="height:20%;background:var(--s2)"></div>`
     const h   = Math.max(15, Math.min(100, (b.ms / 2000) * 100))
     const col = b.ok ? lc(b.ms) : 'var(--r)'
-    return `<div class="tl-bar" style="height:${h}%;background:${col};opacity:.8" title="${b.ms}ms"></div>`
+    return `<div class="tl-bar" data-h="${h}%" style="height:0%;background:${col};opacity:.8" title="${b.ms}ms"></div>`
   }).join('')
+  growBars(tlEl)
 
   // Last check card (single entry, updates in place)
   const last   = history[history.length - 1]
@@ -1991,11 +2049,12 @@ function renderAccess(data) {
       const hOk    = Math.max(total ? Math.round(h.ok   / maxVal * 44) : 0, total > 0 ? 2 : 0)
       const hFail  = Math.max(total ? Math.round(h.fail / maxVal * 44) : 0, h.fail > 0 ? 2 : 0)
       return `<div style="flex:1;display:flex;flex-direction:column;align-items:stretch;gap:1px;justify-content:flex-end" title="${h.hour}h: ${h.ok} ok, ${h.fail} falhas">
-        ${h.fail  ? `<div class="ac-bar" style="height:${hFail}px;background:var(--r);opacity:.8"></div>` : ''}
-        ${h.ok    ? `<div class="ac-bar" style="height:${hOk}px;background:var(--g);opacity:.7"></div>` : ''}
+        ${h.fail  ? `<div class="ac-bar" data-h="${hFail}px" style="height:0;background:var(--r);opacity:.8"></div>` : ''}
+        ${h.ok    ? `<div class="ac-bar" data-h="${hOk}px" style="height:0;background:var(--g);opacity:.7"></div>` : ''}
         ${!total  ? `<div class="ac-bar" style="height:2px;background:var(--bd)"></div>` : ''}
       </div>`
     }).join('')
+    growBars(barsEl)
   }
 
   // IPs suspeitos
