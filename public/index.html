@@ -279,12 +279,26 @@
 
     .app-card-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
 
+    /* Grade de mini-stats (novo formato — antes era lista empilhada) */
+    .app-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .app-stat{
+      background:var(--s2);border-radius:14px;padding:10px 12px;
+      display:flex;flex-direction:column;gap:5px;
+    }
+    .app-stat-icon{
+      width:22px;height:22px;border-radius:7px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.06);color:var(--t2);
+    }
+    .app-stat-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t3)}
+
     .app-metric-row{display:flex;align-items:center;justify-content:space-between}
     .app-metric-label{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px}
     .app-metric-val{font-size:13px;font-weight:700;color:var(--t1);font-variant-numeric:tabular-nums}
     .app-metric-val.ok {color:var(--g)}
     .app-metric-val.err{color:var(--r)}
     .app-metric-val.warn{color:var(--y)}
+    .app-stat .app-metric-val{font-size:16px;font-weight:800}
 
     .app-spark-row{
       background:var(--s2);border-radius:10px;padding:10px 12px;
@@ -303,9 +317,15 @@
     ════════════════════════════════════ */
     .uptime-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
     .uptime-card{
-      background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:16px;
+      background:var(--s1);border:1px solid var(--bd);border-radius:18px;padding:16px;
     }
-    .uptime-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:8px}
+    .uptime-card-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .uptime-card-icon{
+      width:26px;height:26px;border-radius:8px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(0,180,216,.12);color:var(--cb);
+    }
+    .uptime-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3)}
     .uptime-val{font-size:22px;font-weight:800;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums}
     .uptime-val.perfect{color:var(--g)}
     .uptime-val.good   {color:var(--g);opacity:.8}
@@ -403,10 +423,22 @@
     .sec-tool-info{flex:1;min-width:0}
     .sec-tool-name{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:2px}
     .sec-tool-desc{font-size:11px;color:var(--t3)}
-    .sec-tool-body{padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+    .sec-tool-body{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+    .sec-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .sec-stat{
+      background:var(--s2);border-radius:14px;padding:10px 12px;
+      display:flex;flex-direction:column;gap:5px;
+    }
+    .sec-stat-icon{
+      width:22px;height:22px;border-radius:7px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.06);color:var(--t2);
+    }
+    .sec-stat-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t3)}
     .sec-metric-row{display:flex;align-items:center;justify-content:space-between}
     .sec-metric-label{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px}
     .sec-metric-val{font-size:13px;font-weight:700;color:var(--t1);font-variant-numeric:tabular-nums}
+    .sec-stat .sec-metric-val{font-size:16px;font-weight:800}
     .sec-metric-val.ok  {color:var(--g)}
     .sec-metric-val.err {color:var(--r)}
     .sec-metric-val.warn{color:var(--y)}
@@ -465,9 +497,21 @@
     .tc.fail    {border-color:var(--r)}
     @keyframes tc-pulse{0%,100%{border-color:rgba(255,193,7,.3)}50%{border-color:var(--y)}}
 
+    .tc-icon-badge{
+      width:32px;height:32px;border-radius:10px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      background:var(--s2);transition:background .3s;
+    }
+    .tc.ok      .tc-icon-badge{background:rgba(74,226,172,.15)}
+    .tc.fail    .tc-icon-badge{background:rgba(255,71,87,.15)}
+    .tc.testing .tc-icon-badge{background:rgba(255,193,7,.15)}
+    .tc.ok      .tc-icon{stroke:var(--g)}
+    .tc.fail    .tc-icon{stroke:var(--r)}
+    .tc.testing .tc-icon{stroke:var(--y)}
+
     .tc-top{display:flex;align-items:center;justify-content:space-between}
     .tc-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3)}
-    .tc-icon{width:16px;height:16px;flex-shrink:0}
+    .tc-icon{width:16px;height:16px;flex-shrink:0;transition:stroke .3s}
 
     .tc-result{display:flex;align-items:center;gap:5px;min-height:20px}
     .tc-status{font-size:13px;font-weight:800;letter-spacing:-.3px;line-height:1}
@@ -497,8 +541,14 @@
     ════════════════════════════════════ */
     .ac-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
     .ac-card{
-      background:var(--s1);border:1px solid var(--bd);border-radius:16px;
+      background:var(--s1);border:1px solid var(--bd);border-radius:18px;
       padding:14px 12px;display:flex;flex-direction:column;gap:4px;
+    }
+    .ac-card-top{display:flex;align-items:center;gap:7px;margin-bottom:2px}
+    .ac-card-icon{
+      width:22px;height:22px;border-radius:7px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.06);color:var(--t2);
     }
     .ac-card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3)}
     .ac-card-val{font-size:26px;font-weight:800;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1}
@@ -685,33 +735,27 @@
           <div class="app-status-badge"><span class="badge b-neu" id="cr-badge">–</span></div>
         </div>
         <div class="app-card-body">
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Latência (ping)
-            </span>
-            <span class="app-metric-val" id="cr-ms">–</span>
-          </div>
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
-              HTTP Status
-            </span>
-            <span class="app-metric-val" id="cr-http">–</span>
-          </div>
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              Instâncias mínimas
-            </span>
-            <span class="app-metric-val ok">1 (warm)</span>
-          </div>
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Uptime 24h
-            </span>
-            <span class="app-metric-val" id="cr-uptime">–</span>
+          <div class="app-stat-grid">
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <span class="app-metric-val" id="cr-ms">–</span>
+              <span class="app-stat-label">Latência (ping)</span>
+            </div>
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/></svg></span>
+              <span class="app-metric-val" id="cr-http">–</span>
+              <span class="app-stat-label">HTTP Status</span>
+            </div>
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+              <span class="app-metric-val ok">1 (warm)</span>
+              <span class="app-stat-label">Instâncias mín.</span>
+            </div>
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+              <span class="app-metric-val" id="cr-uptime">–</span>
+              <span class="app-stat-label">Uptime 24h</span>
+            </div>
           </div>
           <div class="app-spark-row">
             <div class="app-spark-label">Latência — últimos 20 checks</div>
@@ -736,26 +780,22 @@
           <div class="app-status-badge"><span class="badge b-neu" id="api-badge">–</span></div>
         </div>
         <div class="app-card-body">
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Latência (health)
-            </span>
-            <span class="app-metric-val" id="api-ms">–</span>
-          </div>
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6c0 1.7 3.6 3 8 3s8-1.3 8-3-3.6-3-8-3-8 1.3-8 3z"/></svg>
-              Supabase PostgreSQL
-            </span>
-            <span class="app-metric-val" id="api-db">–</span>
-          </div>
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Uptime 24h
-            </span>
-            <span class="app-metric-val" id="api-uptime">–</span>
+          <div class="app-stat-grid" style="grid-template-columns:repeat(3,1fr)">
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <span class="app-metric-val" id="api-ms">–</span>
+              <span class="app-stat-label">Latência (health)</span>
+            </div>
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6c0 1.7 3.6 3 8 3s8-1.3 8-3-3.6-3-8-3-8 1.3-8 3z"/></svg></span>
+              <span class="app-metric-val" id="api-db">–</span>
+              <span class="app-stat-label">Supabase PostgreSQL</span>
+            </div>
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+              <span class="app-metric-val" id="api-uptime">–</span>
+              <span class="app-stat-label">Uptime 24h</span>
+            </div>
           </div>
           <div class="app-spark-row">
             <div class="app-spark-label">Latência — últimos 20 checks</div>
@@ -808,26 +848,22 @@
           <div class="app-status-badge"><span class="badge b-neu" id="fe-badge">–</span></div>
         </div>
         <div class="app-card-body">
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Tempo de carga
-            </span>
-            <span class="app-metric-val" id="fe-ms">–</span>
-          </div>
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
-              HTTP Status
-            </span>
-            <span class="app-metric-val" id="fe-http">–</span>
-          </div>
-          <div class="app-metric-row">
-            <span class="app-metric-label">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Uptime 24h
-            </span>
-            <span class="app-metric-val" id="fe-uptime">–</span>
+          <div class="app-stat-grid" style="grid-template-columns:repeat(3,1fr)">
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <span class="app-metric-val" id="fe-ms">–</span>
+              <span class="app-stat-label">Tempo de carga</span>
+            </div>
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/></svg></span>
+              <span class="app-metric-val" id="fe-http">–</span>
+              <span class="app-stat-label">HTTP Status</span>
+            </div>
+            <div class="app-stat">
+              <span class="app-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+              <span class="app-metric-val" id="fe-uptime">–</span>
+              <span class="app-stat-label">Uptime 24h</span>
+            </div>
           </div>
           <div class="app-spark-row">
             <div class="app-spark-label">Latência — últimos 20 checks</div>
@@ -847,12 +883,18 @@
     <!-- Uptime cards -->
     <div class="uptime-grid" id="uptime-grid">
       <div class="uptime-card">
-        <div class="uptime-label">1 hora</div>
+        <div class="uptime-card-top">
+          <span class="uptime-card-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+          <span class="uptime-label">1 hora</span>
+        </div>
         <div class="uptime-val" id="up-1h">–%</div>
         <div class="uptime-sub" id="up-1h-sub">–</div>
       </div>
       <div class="uptime-card">
-        <div class="uptime-label">24 horas</div>
+        <div class="uptime-card-top">
+          <span class="uptime-card-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+          <span class="uptime-label">24 horas</span>
+        </div>
         <div class="uptime-val" id="up-24h">–%</div>
         <div class="uptime-sub" id="up-24h-sub">–</div>
       </div>
@@ -913,19 +955,17 @@
           <span class="badge b-neu" id="npm-badge">–</span>
         </div>
         <div class="sec-tool-body">
-          <div class="sec-metric-row">
-            <span class="sec-metric-label">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Último scan
-            </span>
-            <span class="sec-metric-val" id="npm-time">–</span>
-          </div>
-          <div class="sec-metric-row">
-            <span class="sec-metric-label">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              Vulnerabilidades
-            </span>
-            <span class="sec-metric-val" id="npm-total">–</span>
+          <div class="sec-stat-grid">
+            <div class="sec-stat">
+              <span class="sec-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <span class="sec-metric-val" id="npm-time">–</span>
+              <span class="sec-stat-label">Último scan</span>
+            </div>
+            <div class="sec-stat">
+              <span class="sec-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+              <span class="sec-metric-val" id="npm-total">–</span>
+              <span class="sec-stat-label">Vulnerabilidades</span>
+            </div>
           </div>
           <div class="sec-vulns" id="npm-vulns"></div>
         </div>
@@ -946,19 +986,17 @@
           <span class="badge b-neu" id="trivy-badge">–</span>
         </div>
         <div class="sec-tool-body">
-          <div class="sec-metric-row">
-            <span class="sec-metric-label">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Último scan
-            </span>
-            <span class="sec-metric-val" id="trivy-time">–</span>
-          </div>
-          <div class="sec-metric-row">
-            <span class="sec-metric-label">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              Vulnerabilidades
-            </span>
-            <span class="sec-metric-val" id="trivy-total">–</span>
+          <div class="sec-stat-grid">
+            <div class="sec-stat">
+              <span class="sec-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              <span class="sec-metric-val" id="trivy-time">–</span>
+              <span class="sec-stat-label">Último scan</span>
+            </div>
+            <div class="sec-stat">
+              <span class="sec-stat-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+              <span class="sec-metric-val" id="trivy-total">–</span>
+              <span class="sec-stat-label">Vulnerabilidades</span>
+            </div>
           </div>
           <div class="sec-vulns" id="trivy-vulns"></div>
         </div>
@@ -1000,9 +1038,11 @@
 
         <!-- Infraestrutura -->
         <div class="tc" id="tc-servidor">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Servidor</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-servidor">–</span><span class="tc-ms" id="tcm-servidor"></span></div>
           <div class="tc-detail" id="tcd-servidor">Cloud Run · GET /ping</div>
@@ -1014,9 +1054,11 @@
         </div>
 
         <div class="tc" id="tc-db">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M4 6c0 1.7 3.6 3 8 3s8-1.3 8-3-3.6-3-8-3-8 1.3-8 3z"/><path d="M4 6v4c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 10v4c0 1.7 3.6 3 8 3s8-1.3 8-3v-4"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Banco de Dados</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M4 6c0 1.7 3.6 3 8 3s8-1.3 8-3-3.6-3-8-3-8 1.3-8 3z"/><path d="M4 6v4c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 10v4c0 1.7 3.6 3 8 3s8-1.3 8-3v-4"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-db">–</span><span class="tc-ms" id="tcm-db"></span></div>
           <div class="tc-detail" id="tcd-db">Supabase · GET /health</div>
@@ -1028,9 +1070,11 @@
         </div>
 
         <div class="tc" id="tc-frontend">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Frontend</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-frontend">–</span><span class="tc-ms" id="tcm-frontend"></span></div>
           <div class="tc-detail" id="tcd-frontend">React PWA · GET /</div>
@@ -1043,9 +1087,11 @@
 
         <!-- API Routes -->
         <div class="tc" id="tc-auth">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Auth API</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-auth">–</span><span class="tc-ms" id="tcm-auth"></span></div>
           <div class="tc-detail" id="tcd-auth">GET /api/auth/me</div>
@@ -1057,9 +1103,11 @@
         </div>
 
         <div class="tc" id="tc-goals">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Metas</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-goals">–</span><span class="tc-ms" id="tcm-goals"></span></div>
           <div class="tc-detail" id="tcd-goals">GET /api/goals</div>
@@ -1071,9 +1119,11 @@
         </div>
 
         <div class="tc" id="tc-installments">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Parcelas</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-installments">–</span><span class="tc-ms" id="tcm-installments"></span></div>
           <div class="tc-detail" id="tcd-installments">GET /api/installments</div>
@@ -1085,9 +1135,11 @@
         </div>
 
         <div class="tc" id="tc-notifications">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Notificações</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-notifications">–</span><span class="tc-ms" id="tcm-notifications"></span></div>
           <div class="tc-detail" id="tcd-notifications">GET /api/notifications</div>
@@ -1099,9 +1151,11 @@
         </div>
 
         <div class="tc" id="tc-agent">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">IA Agent</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-agent">–</span><span class="tc-ms" id="tcm-agent"></span></div>
           <div class="tc-detail" id="tcd-agent">Groq · GET /api/agent</div>
@@ -1113,9 +1167,11 @@
         </div>
 
         <div class="tc" id="tc-payments">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Pagamentos</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-payments">–</span><span class="tc-ms" id="tcm-payments"></span></div>
           <div class="tc-detail" id="tcd-payments">Mercado Pago · GET /api/payments/history</div>
@@ -1127,9 +1183,11 @@
         </div>
 
         <div class="tc" id="tc-reports">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Relatórios</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-reports">–</span><span class="tc-ms" id="tcm-reports"></span></div>
           <div class="tc-detail" id="tcd-reports">GET /api/reports</div>
@@ -1141,9 +1199,11 @@
         </div>
 
         <div class="tc" id="tc-2fa">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">2FA</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-2fa">–</span><span class="tc-ms" id="tcm-2fa"></span></div>
           <div class="tc-detail" id="tcd-2fa">GET /api/auth/2fa</div>
@@ -1156,9 +1216,11 @@
 
         <!-- Segurança -->
         <div class="tc" id="tc-npm">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">npm audit</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-npm">–</span><span class="tc-ms" id="tcm-npm"></span></div>
           <div class="tc-detail" id="tcd-npm">Dependências Node.js · CVEs</div>
@@ -1170,9 +1232,11 @@
         </div>
 
         <div class="tc" id="tc-trivy">
+          <div class="tc-icon-badge">
+            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
           <div class="tc-top">
             <span class="tc-name">Trivy</span>
-            <svg class="tc-icon" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
           </div>
           <div class="tc-result"><span class="tc-status" id="tcs-trivy">–</span><span class="tc-ms" id="tcm-trivy"></span></div>
           <div class="tc-detail" id="tcd-trivy">Container · HIGH/CRITICAL</div>
@@ -1214,22 +1278,34 @@
       <!-- Cards de resumo -->
       <div class="ac-summary">
         <div class="ac-card">
-          <div class="ac-card-label">Total 24h</div>
+          <div class="ac-card-top">
+            <span class="ac-card-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
+            <span class="ac-card-label">Total 24h</span>
+          </div>
           <div class="ac-card-val" id="ac-total">–</div>
           <div class="ac-card-sub">tentativas</div>
         </div>
         <div class="ac-card">
-          <div class="ac-card-label">Sucessos</div>
+          <div class="ac-card-top">
+            <span class="ac-card-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span class="ac-card-label">Sucessos</span>
+          </div>
           <div class="ac-card-val ok" id="ac-ok">–</div>
           <div class="ac-card-sub">logins ok</div>
         </div>
         <div class="ac-card">
-          <div class="ac-card-label">Falhas</div>
+          <div class="ac-card-top">
+            <span class="ac-card-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></span>
+            <span class="ac-card-label">Falhas</span>
+          </div>
           <div class="ac-card-val" id="ac-fail">–</div>
           <div class="ac-card-sub" id="ac-fail-rate">–% taxa de falha</div>
         </div>
         <div class="ac-card">
-          <div class="ac-card-label">IPs suspeitos</div>
+          <div class="ac-card-top">
+            <span class="ac-card-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+            <span class="ac-card-label">IPs suspeitos</span>
+          </div>
           <div class="ac-card-val" id="ac-suspicious">–</div>
           <div class="ac-card-sub">≥3 falhas/hora</div>
         </div>
@@ -1316,19 +1392,43 @@
   </button>
 </nav>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="/vendor/gsap/gsap.min.js"></script>
+<script src="/vendor/gsap/ScrollTrigger.min.js"></script>
 <script>
 // ── Animação (GSAP) ──
 const hasGsap = typeof gsap !== 'undefined'
 const hasScrollTrigger = hasGsap && typeof ScrollTrigger !== 'undefined'
 
-// Reveal ao rolar — aplica a todos os cards "estáveis" (existem no DOM desde o load,
-// só o conteúdo interno muda). Cards recriados via innerHTML (listas de incidentes,
-// falhas, IPs) ficam de fora — não vale a pena re-vincular ScrollTrigger a cada render.
+// Seletor de todos os cards "estáveis" (existem no DOM desde o load, só o conteúdo
+// interno muda). Cards recriados via innerHTML (listas de incidentes, falhas, IPs)
+// ficam de fora — não vale a pena re-animar elemento por elemento a cada render.
+const REVEAL_SEL = '.hero, .svc-card, .app-card, .uptime-card, .timeline-wrap, .last-check-card, .sec-tool-card, .tc, .ac-card, .ac-chart'
+const REVEAL_ICON_SEL = '.svc-card-icon, .app-icon, .sec-tool-icon, .tc-icon-badge, .ac-card-icon, .uptime-card-icon'
+
+// Anima os cards de um container — chamado a CADA troca de aba (garante que a
+// animação sempre aconteça, sem depender de scroll ou de já ter rodado antes)
+function revealCards(container) {
+  if (!hasGsap || !container) return
+  const cards = container.querySelectorAll(REVEAL_SEL)
+  if (cards.length) {
+    gsap.fromTo(cards,
+      { opacity: 0, y: 32, scale: .94 },
+      { opacity: 1, y: 0, scale: 1, duration: .5, ease: 'power2.out', stagger: .07, overwrite: true },
+    )
+  }
+  const icons = container.querySelectorAll(REVEAL_ICON_SEL)
+  if (icons.length) {
+    gsap.fromTo(icons,
+      { scale: 0, rotate: -25, opacity: 0 },
+      { scale: 1, rotate: 0, opacity: 1, duration: .45, delay: .1, ease: 'back.out(2.2)', stagger: .07, overwrite: true },
+    )
+  }
+}
+
+// Reveal ao rolar — cobre o caso de tabs longas (Testes, Acessos) onde nem todo
+// card está visível de cara. Complementa o revealCards() do switchTab, não substitui.
 if (hasScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger)
-  const REVEAL_SEL = '.hero, .svc-card, .app-card, .uptime-card, .timeline-wrap, .last-check-card, .sec-tool-card, .tc, .ac-card, .ac-chart'
   ScrollTrigger.batch(REVEAL_SEL, {
     start: 'top 92%',
     onEnter: batch => gsap.fromTo(batch,
@@ -1336,8 +1436,7 @@ if (hasScrollTrigger) {
       { opacity: 1, y: 0, scale: 1, duration: .55, ease: 'power2.out', stagger: .07, overwrite: true },
     ),
   })
-  // Ícones dão um "pop" com leve rotação, logo depois do card aparecer
-  ScrollTrigger.batch('.svc-card-icon, .app-icon, .sec-tool-icon', {
+  ScrollTrigger.batch(REVEAL_ICON_SEL, {
     start: 'top 92%',
     onEnter: batch => gsap.fromTo(batch,
       { scale: 0, rotate: -25, opacity: 0 },
@@ -1383,7 +1482,8 @@ function switchTab(name, btn) {
   const target = document.getElementById('tab-' + name)
   target.classList.add('active')
   btn.classList.add('active')
-  if (hasGsap) gsap.fromTo(target, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .3, ease: 'power2.out' })
+  if (hasGsap) gsap.fromTo(target, { opacity: 0 }, { opacity: 1, duration: .25, ease: 'power2.out' })
+  revealCards(target) // sempre anima os cards da aba que acabou de ficar visível
   if (name === 'history')  renderHistory()
   if (name === 'security') fetchSecurity()
   if (name === 'access')   fetchAccess()
@@ -1433,6 +1533,7 @@ function pingRadar(ok) {
 function growBars(container) {
   if (!container) return
   const bars = container.querySelectorAll('[data-h]')
+  if (!bars.length) return
   if (!hasGsap) { bars.forEach(b => { b.style.height = b.dataset.h }); return }
   gsap.fromTo(bars, { height: 0 }, {
     height: (i, t) => t.dataset.h, duration: .5, ease: 'power2.out', stagger: .015, overwrite: true,
@@ -2109,6 +2210,7 @@ function renderAccess(data) {
 })()
 
 // ── Init ──
+revealCards(document.getElementById('tab-overview')) // 1ª aba não passa por switchTab()
 renderHistory()
 doCheck()
 fetchSecurity()
